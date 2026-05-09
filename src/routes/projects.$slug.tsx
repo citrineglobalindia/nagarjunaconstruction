@@ -233,7 +233,7 @@ function Gallery({ images }: { images: string[] }) {
               <X className="h-7 w-7" />
             </button>
             <button
-              onClick={(e) => { e.stopPropagation(); setActive((active - 1 + images.length) % images.length); }}
+              onClick={(e) => { e.stopPropagation(); setActive(((active ?? 0) - 1 + images.length) % images.length); }}
               className="absolute left-6 text-cream hover:text-gold"
               aria-label="Previous"
             >
@@ -250,7 +250,7 @@ function Gallery({ images }: { images: string[] }) {
               className="max-h-[88vh] max-w-[92vw] object-contain shadow-2xl"
             />
             <button
-              onClick={(e) => { e.stopPropagation(); setActive((active + 1) % images.length); }}
+              onClick={(e) => { e.stopPropagation(); setActive(((active ?? 0) + 1) % images.length); }}
               className="absolute right-6 text-cream hover:text-gold"
               aria-label="Next"
             >
