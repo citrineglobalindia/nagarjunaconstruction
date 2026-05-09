@@ -51,7 +51,7 @@ function ProjectsPage() {
   }, [projects, search]);
 
   function setFilter(key: keyof typeof search, value: string | undefined) {
-    navigate({ search: (prev) => ({ ...prev, [key]: value || undefined }) });
+    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: value || undefined }) });
   }
 
   return (
