@@ -14,7 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inquiries: {
+        Row: {
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          project_id: string | null
+          source: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          project_id?: string | null
+          source?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          project_id?: string | null
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          amenities: Json | null
+          bedrooms_max: number | null
+          bedrooms_min: number | null
+          brochure_url: string | null
+          created_at: string
+          description: string | null
+          featured: boolean
+          gallery: Json | null
+          handover_date: string | null
+          hero_image: string | null
+          id: string
+          location: string
+          name: string
+          price_from: number | null
+          slug: string
+          status: string
+          type: string
+        }
+        Insert: {
+          amenities?: Json | null
+          bedrooms_max?: number | null
+          bedrooms_min?: number | null
+          brochure_url?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          gallery?: Json | null
+          handover_date?: string | null
+          hero_image?: string | null
+          id?: string
+          location: string
+          name: string
+          price_from?: number | null
+          slug: string
+          status: string
+          type: string
+        }
+        Update: {
+          amenities?: Json | null
+          bedrooms_max?: number | null
+          bedrooms_min?: number | null
+          brochure_url?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          gallery?: Json | null
+          handover_date?: string | null
+          hero_image?: string | null
+          id?: string
+          location?: string
+          name?: string
+          price_from?: number | null
+          slug?: string
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
