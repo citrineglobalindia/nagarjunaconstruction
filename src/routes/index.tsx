@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ChevronDown, Award, Globe2, Diamond, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -26,65 +27,120 @@ function HomePage() {
     },
   });
 
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.18]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+
   return (
     <>
       {/* HERO */}
-      <section className="relative h-screen min-h-[680px] w-full overflow-hidden bg-[color:var(--navy)]">
-        <img
-          src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2400&q=80"
-          alt="Luxury skyline"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--navy)]/70 via-[color:var(--navy)]/30 to-[color:var(--navy)]/85" />
+      <section ref={heroRef} className="relative h-screen min-h-[680px] w-full overflow-hidden bg-[color:var(--navy)]">
+        <motion.div
+          style={{ y: mediaY, scale: mediaScale }}
+          className="absolute inset-0 h-[120%] w-full will-change-transform"
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2400&q=80"
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source
+              src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-luxury-villa-1572/1080p.mp4"
+              type="video/mp4"
+            />
+            <source
+              src="https://cdn.coverr.co/videos/coverr-aerial-shot-of-dubai-marina-2633/1080p.mp4"
+              type="video/mp4"
+            />
+          </video>
+        </motion.div>
 
-        <div className="container-luxe relative z-10 flex h-full flex-col justify-center text-cream">
+        {/* Cinematic gradient overlays */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[color:var(--navy)]/85 via-[color:var(--navy)]/35 to-[color:var(--navy)]/95" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[color:var(--navy)]/70 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,color-mix(in_oklab,var(--navy)_70%,transparent)_100%)]" />
+
+        <motion.div
+          style={{ y: contentY, opacity: contentOpacity }}
+          className="container-luxe relative z-10 flex h-full flex-col justify-center text-cream"
+        >
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="h-px w-20 origin-left bg-gold"
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="h-px w-24 origin-left bg-gold"
           />
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
             className="mt-6 text-[11px] uppercase tracking-[0.4em] text-gold"
           >
             Nagarjuna Corporation · Live & Let-live
           </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.35, ease: "easeOut" }}
-            className="mt-6 max-w-4xl font-display text-[3.25rem] leading-[1.02] tracking-tight text-cream md:text-7xl"
-          >
-            Iconic Living.<br />Crafted for the Few.
-          </motion.h1>
+
+          {/* Gold-line headline reveal */}
+          <div className="mt-6 max-w-4xl overflow-hidden">
+            <motion.h1
+              initial={{ y: "110%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 1.1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-[3.25rem] leading-[1.02] tracking-tight text-cream md:text-7xl"
+            >
+              Iconic Living.
+            </motion.h1>
+          </div>
+          <div className="max-w-4xl overflow-hidden">
+            <motion.h1
+              initial={{ y: "110%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 1.1, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-[3.25rem] leading-[1.02] tracking-tight text-cream md:text-7xl"
+            >
+              Crafted for the Few.
+            </motion.h1>
+          </div>
+
+          {/* Animated gold rule under headline */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.4, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8 h-px w-40 origin-left bg-gradient-to-r from-gold via-gold/70 to-transparent"
+          />
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.7 }}
-            className="mt-8 max-w-xl text-base leading-relaxed text-cream/80"
+            transition={{ duration: 1, delay: 1.2 }}
+            className="mt-6 max-w-xl text-base leading-relaxed text-cream/80"
           >
             A curated portfolio of branded residences, private villas and skyline towers across Dubai, the Maldives and London.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
             className="mt-10 flex flex-wrap gap-4"
           >
             <Link to="/projects" className="btn-gold">Explore Projects</Link>
             <InquiryDialog source="hero" trigger={<button className="btn-outline-gold">Book a Consultation</button>} />
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-cream/60"
+          className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/60"
         >
-          <ChevronDown className="h-5 w-5" />
+          <span className="text-[10px] uppercase tracking-[0.32em]">Scroll</span>
+          <ChevronDown className="h-4 w-4" />
         </motion.div>
       </section>
 
