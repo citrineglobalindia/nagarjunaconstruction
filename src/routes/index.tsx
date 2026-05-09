@@ -19,7 +19,7 @@ function HomePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select("slug,name,location,type,status,price_from,hero_image")
+        .select("id,slug,name,location,type,status,price_from,hero_image,bedrooms_min,bedrooms_max")
         .eq("featured", true)
         .limit(3);
       if (error) throw error;
