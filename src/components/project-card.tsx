@@ -57,7 +57,7 @@ export function ProjectCard(p: ProjectCardProps) {
       viewport={{ once: true, margin: "-80px" }}
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 220, damping: 24 }}
-      className="group flex flex-col border border-[color:var(--navy)]/15 bg-card shadow-[0_2px_18px_-12px_rgba(10,26,47,0.2)] transition-shadow duration-500 hover:shadow-[0_24px_60px_-22px_rgba(10,26,47,0.35)]"
+      className="group flex flex-col border border-[color:var(--navy)] bg-card shadow-[0_2px_18px_-12px_rgba(10,26,47,0.2)] transition-shadow duration-500 hover:shadow-[0_24px_60px_-22px_rgba(10,26,47,0.35)]"
     >
       {/* Image with status ribbon */}
       <Link
@@ -135,18 +135,18 @@ export function ProjectCard(p: ProjectCardProps) {
           )}
         </motion.div>
 
-        {/* CTAs — flush, square, navy. Sold Out shows single "View Project" */}
-        <motion.div variants={itemVariants} className="mt-auto -mx-px -mb-px">
+        {/* CTAs — anchored to bottom corners with gap */}
+        <motion.div variants={itemVariants} className="mt-auto flex items-stretch justify-between gap-3 pb-7">
           {p.status === "Sold Out" ? (
             <Link
               to="/projects/$slug"
               params={{ slug: p.slug }}
-              className="block w-1/2 bg-[color:var(--navy)] px-4 py-4 text-center text-[13px] font-medium tracking-wide text-cream transition-colors hover:bg-[color:var(--navy)]/90"
+              className="bg-[color:var(--navy)] px-7 py-4 text-center text-[13px] font-medium tracking-wide text-cream transition-colors hover:bg-[color:var(--navy)]/90"
             >
               View Project
             </Link>
           ) : (
-            <div className="grid grid-cols-2">
+            <>
               <InquiryDialog
                 projectId={p.id}
                 projectName={p.name}
@@ -159,7 +159,7 @@ export function ProjectCard(p: ProjectCardProps) {
                 source="card-enquire"
                 trigger={<CTAButton>Enquire Now</CTAButton>}
               />
-            </div>
+            </>
           )}
         </motion.div>
       </div>
