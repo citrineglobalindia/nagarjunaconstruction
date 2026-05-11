@@ -289,13 +289,24 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
   return (
     <button
       onClick={onClick}
-      className={`relative px-7 py-3 text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors ${
-        active ? "text-[color:var(--pv-blue)]" : "text-slate-500 hover:text-[color:var(--pv-blue)]"
+      className={`rounded-full px-7 py-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+        active
+          ? "bg-[color:var(--pv-blue)] text-white"
+          : "bg-transparent text-[color:var(--pv-blue)] hover:bg-[color:var(--pv-blue)]/5"
       }`}
     >
       {children}
-      {active && <motion.span layoutId="tabline" className="absolute inset-x-3 -bottom-px h-0.5 bg-[color:var(--pv-blue)]" />}
     </button>
+  );
+}
+
+function TabGroup({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-10 flex justify-center">
+      <div className="inline-flex items-center gap-1 rounded-full border border-[color:var(--pv-line)] bg-white p-1">
+        {children}
+      </div>
+    </div>
   );
 }
 
