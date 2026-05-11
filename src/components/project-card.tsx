@@ -159,6 +159,7 @@ export function ProjectCard(p: ProjectCardProps) {
 }
 
 function CTAButton({ children }: { children: React.ReactNode }) {
+  const isRTL = useIsRTL();
   return (
     <motion.button
       whileHover={{ backgroundColor: "rgba(10,26,47,0.92)" }}
@@ -167,7 +168,7 @@ function CTAButton({ children }: { children: React.ReactNode }) {
       className="relative overflow-hidden bg-[color:var(--navy)] px-4 py-4 text-[13px] font-medium tracking-wide text-cream"
     >
       <motion.span
-        className="absolute inset-0 origin-left bg-gold/20"
+        className={`absolute inset-0 bg-gold/20 ${isRTL ? "origin-right" : "origin-left"}`}
         initial={{ scaleX: 0 }}
         whileHover={{ scaleX: 1 }}
         transition={{ duration: 0.5, ease: EASE }}
