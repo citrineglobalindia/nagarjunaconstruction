@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   MapPin, ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
   Building2, Layers, Home, IndianRupee, Plus, Minus,
+  Train, GraduationCap, HeartPulse, Briefcase, ShoppingBag, Trees,
 } from "lucide-react";
 import { InquiryDialog } from "@/components/inquiry-dialog";
 import { BrochureDialog } from "@/components/brochure-dialog";
