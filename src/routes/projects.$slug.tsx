@@ -1,12 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MapPin, Calendar, Wallet, Bed, ArrowLeft, X, ChevronLeft, ChevronRight, Download,
-  Dumbbell, Waves, Trees, Shield, Car, Wifi, Utensils, Sparkles,
-  Users, Baby, Building2, FlowerIcon, Check,
+  MapPin, ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
+  Building2, Layers, Home, IndianRupee, Plus, Minus,
 } from "lucide-react";
 import { InquiryDialog } from "@/components/inquiry-dialog";
 import { BrochureDialog } from "@/components/brochure-dialog";
@@ -14,38 +13,28 @@ import { BrochureDialog } from "@/components/brochure-dialog";
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetail,
   notFoundComponent: () => (
-    <div className="container-luxe py-40 text-center">
-      <h1 className="font-display text-4xl">Residence not found</h1>
-      <Link to="/projects" className="btn-gold mt-8 inline-flex">View all projects</Link>
+    <div className="min-h-screen bg-white pt-40 pb-20 text-center">
+      <h1 className="font-display text-4xl text-[color:var(--pv-blue)]">Project not found</h1>
+      <Link to="/projects" className="mt-8 inline-flex bg-[color:var(--pv-blue)] px-8 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white">
+        View all projects
+      </Link>
     </div>
   ),
 });
 
-const AMENITY_ICONS: Record<string, any> = {
-  gym: Dumbbell, fitness: Dumbbell,
-  pool: Waves, swim: Waves, beach: Waves,
-  garden: Trees, landscape: Trees, park: Trees,
-  security: Shield, concierge: Shield,
-  parking: Car, valet: Car,
-  wifi: Wifi, lounge: Sofa(),
-  dining: Utensils, restaurant: Utensils,
-  spa: Sparkles, wellness: Sparkles,
-  club: Users, community: Users,
-  kids: Baby, children: Baby, play: Baby,
-  business: Building2, lobby: Building2,
-  yoga: FlowerIcon,
-};
-function Sofa() { return Users; }
+/* ================================================================
+   Puravankara-style Project Details
+   Color system (scoped to this page via inline style on root <div>):
+     --pv-blue:    deep brand blue (nav / headings / CTAs)
+     --pv-blue-2:  hover / accent
+     --pv-soft:    very light blue tint surface
+     --pv-line:    hairline border
+   ================================================================ */
 
-function iconFor(name: string) {
-  const key = Object.keys(AMENITY_ICONS).find((k) => name.toLowerCase().includes(k));
-  return key ? AMENITY_ICONS[key] : Sparkles;
-}
-
-function formatPrice(v: number | null) {
+function formatPriceShort(v: number | null) {
   if (!v) return "On Request";
-  if (v >= 10_000_000) return `₹${(v / 10_000_000).toFixed(2)} Cr*`;
-  return `₹${Math.round(v / 100_000)} Lakhs*`;
+  if (v >= 10_000_000) return `${(v / 10_000_000).toFixed(2)} Cr*`;
+  return `${(v / 100_000).toFixed(2)} L*`;
 }
 
 function ProjectDetail() {
@@ -60,210 +49,345 @@ function ProjectDetail() {
     },
   });
 
-  if (isLoading) return <div className="container-luxe py-40 text-center text-muted-foreground">Loading…</div>;
+  if (isLoading)
+    return <div className="min-h-screen bg-white pt-40 text-center text-sm uppercase tracking-[0.2em] text-slate-500">Loading…</div>;
   if (!project) return null;
 
   const gallery = ((project.gallery as string[]) || []).filter(Boolean);
-  const fullGallery = project.hero_image ? [project.hero_image, ...gallery] : gallery;
   const amenities = (project.amenities as string[]) || [];
+  const bhkRange =
+    project.bedrooms_min && project.bedrooms_max
+      ? project.bedrooms_min === project.bedrooms_max
+        ? `${project.bedrooms_min} BHK`
+        : `${project.bedrooms_min}, ${project.bedrooms_max} BHK`
+      : "Various";
 
   return (
-    <>
-      {/* Hero */}
-      <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden bg-[color:var(--navy)]">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={project.hero_image ?? undefined}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source
-            src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-luxury-villa-1572/1080p.mp4"
-            type="video/mp4"
-          />
-          <source
-            src="https://cdn.coverr.co/videos/coverr-aerial-shot-of-dubai-marina-2633/1080p.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--navy)]/95 via-[color:var(--navy)]/40 to-[color:var(--navy)]/55" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--navy)]/60 via-transparent to-transparent" />
-        <div className="container-luxe relative z-10 flex h-full flex-col justify-end pb-16 text-cream">
-          <Link to="/projects" className="mb-8 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-cream/70 hover:text-gold">
-            <ArrowLeft className="h-3 w-3" /> Back to Collection
-          </Link>
-          <span className="inline-flex w-fit bg-gold px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--navy)]">
-            {project.status}
-          </span>
-          <h1 className="mt-5 font-display text-5xl md:text-7xl">{project.name}</h1>
-          <p className="mt-3 flex items-center gap-2 text-sm uppercase tracking-[0.22em] text-gold">
-            <MapPin className="h-4 w-4" /> {project.location}
+    <div
+      className="bg-white text-slate-700"
+      style={
+        {
+          ["--pv-blue" as any]: "#1B3A6B",
+          ["--pv-blue-2" as any]: "#27518F",
+          ["--pv-soft" as any]: "#F4F7FB",
+          ["--pv-line" as any]: "#E3E8EF",
+        } as React.CSSProperties
+      }
+    >
+      {/* ============== HERO ============== */}
+      <section className="relative h-[100vh] min-h-[640px] w-full overflow-hidden bg-[color:var(--pv-blue)]">
+        {project.hero_image && (
+          <img src={project.hero_image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/30" />
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-16 md:px-16 md:pb-20">
+          <h1 className="font-display text-5xl font-light text-white md:text-7xl">{project.name}</h1>
+          <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
+            Near {project.location} | {bhkRange}
+            {project.price_from ? ` | ${formatPriceShort(project.price_from as number)} Onwards*` : ""}
           </p>
+        </div>
+        <div className="absolute bottom-4 left-6 text-[10px] uppercase tracking-[0.3em] text-white/60 md:left-16">
+          Artistic Impression
         </div>
       </section>
 
-      <section className="bg-background py-20 md:py-28">
-        <div className="container-luxe grid gap-16 lg:grid-cols-[1fr_360px]">
-          {/* Main */}
-          <div>
-            <p className="eyebrow"><span className="gold-rule" />Overview</p>
-            <h2 className="mt-4 font-display text-3xl text-[color:var(--navy)] md:text-4xl">A sanctuary of considered living.</h2>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85">{project.description}</p>
+      {/* ============== BREADCRUMB ============== */}
+      <div className="border-b border-[color:var(--pv-line)] bg-white">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-6 py-5 text-xs text-slate-500 md:px-10">
+          <Link to="/" className="hover:text-[color:var(--pv-blue)]">Home</Link>
+          <ChevronRight className="h-3 w-3" />
+          <Link to="/projects" className="hover:text-[color:var(--pv-blue)]">Residential</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-slate-700">{project.location}</span>
+          <ChevronRight className="h-3 w-3" />
+          <span className="font-medium text-[color:var(--pv-blue)]">{project.name}</span>
+        </div>
+      </div>
 
-            {/* Gallery — lightbox grid */}
-            {fullGallery.length > 0 && <Gallery images={fullGallery} />}
-
-            {/* Amenities with icons */}
-            {amenities.length > 0 && (
-              <div className="mt-20">
-                <p className="eyebrow"><span className="gold-rule" />World-Class Amenities</p>
-                <h3 className="mt-3 font-display text-2xl text-[color:var(--navy)] md:text-3xl">Crafted for elevated living.</h3>
-                <div className="mt-8 grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-4">
-                  {amenities.map((a, i) => {
-                    const Icon = iconFor(a);
-                    return (
-                      <motion.div
-                        key={a}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: i * 0.04 }}
-                        className="flex flex-col items-center gap-3 bg-card px-4 py-8 text-center transition-colors hover:bg-muted"
-                      >
-                        <Icon className="h-7 w-7 text-gold" strokeWidth={1.4} />
-                        <span className="text-sm font-medium text-[color:var(--navy)]">{a}</span>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Floor Plans tabs */}
-            <FloorPlans project={project} />
-
-            {/* Payment Plan stepper */}
-            <PaymentPlan />
-          </div>
-
-          {/* Sticky sidebar — desktop */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border border-[color:var(--navy)]/15 bg-card p-8 shadow-[0_20px_60px_-30px_rgba(10,26,47,0.25)]">
-              <p className="eyebrow"><span className="gold-rule" />Key Facts</p>
-              <dl className="mt-6 space-y-5 text-sm">
-                <Fact icon={MapPin} label="Location" value={project.location} />
-                <Fact icon={Calendar} label="Handover" value={project.handover_date ?? "TBA"} />
-                <Fact icon={Wallet} label="Starting Price" value={formatPrice(project.price_from as number | null)} />
-                <Fact
-                  icon={Bed}
-                  label="Configurations"
-                  value={project.bedrooms_min && project.bedrooms_max ? `${project.bedrooms_min} – ${project.bedrooms_max} BHK` : "Various"}
-                />
-              </dl>
-              <InquiryDialog
-                projectId={project.id}
-                projectName={project.name}
-                source="project-detail"
-                trigger={<button className="btn-gold mt-8 w-full">Register Interest</button>}
+      {/* ============== OVERVIEW ============== */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-6 md:px-10">
+          <div className="grid gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+            <div className="overflow-hidden">
+              <img
+                src={project.hero_image ?? gallery[0]}
+                alt={project.name}
+                className="h-full w-full object-cover"
               />
-              <InquiryDialog
-                projectId={project.id}
-                projectName={project.name}
-                source="site-visit"
-                trigger={
-                  <button className="mt-3 w-full border border-[color:var(--navy)] bg-transparent px-4 py-3.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-[color:var(--navy)] transition-colors hover:bg-[color:var(--navy)] hover:text-cream">
-                    Book a Site Visit
-                  </button>
-                }
-              />
+            </div>
+            <div>
+              <h2 className="font-display text-3xl font-normal text-[color:var(--pv-blue)] md:text-4xl">
+                {project.name}
+              </h2>
+              <h3 className="mt-3 font-display text-2xl font-light text-slate-700 md:text-3xl">
+                {project.type} Living in {project.location}
+              </h3>
+              <p className="mt-7 text-base leading-[1.85] text-slate-600">
+                {project.description ||
+                  `A thoughtfully crafted residential development in ${project.location}, designed around space, light, and a sense of community. Every residence balances modern interiors with generous outdoor amenities for a complete lifestyle experience.`}
+              </p>
               <BrochureDialog
                 projectId={project.id}
                 projectName={project.name}
                 brochureUrl={project.brochure_url}
                 trigger={
-                  <button className="mt-3 inline-flex w-full items-center justify-center gap-2 border border-gold/60 bg-transparent px-4 py-3.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-[color:var(--navy)] transition-colors hover:bg-gold hover:text-[color:var(--navy)]">
+                  <button className="mt-9 inline-flex items-center gap-2 border border-[color:var(--pv-blue)] bg-transparent px-7 py-3.5 text-[12px] font-semibold uppercase tracking-[0.2em] text-[color:var(--pv-blue)] transition-colors hover:bg-[color:var(--pv-blue)] hover:text-white">
                     <Download className="h-4 w-4" /> Download Brochure
                   </button>
                 }
               />
             </div>
-          </aside>
-
-          {/* Inline Key Facts card — mobile/tablet */}
-          <aside className="lg:hidden -order-1">
-            <div className="border border-[color:var(--navy)]/15 bg-card p-6 sm:p-8">
-              <p className="eyebrow"><span className="gold-rule" />Key Facts</p>
-              <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5 text-sm">
-                <Fact icon={MapPin} label="Location" value={project.location} />
-                <Fact icon={Calendar} label="Handover" value={project.handover_date ?? "TBA"} />
-                <Fact icon={Wallet} label="Starting Price" value={formatPrice(project.price_from as number | null)} />
-                <Fact
-                  icon={Bed}
-                  label="Configurations"
-                  value={project.bedrooms_min && project.bedrooms_max ? `${project.bedrooms_min} – ${project.bedrooms_max} BHK` : "Various"}
-                />
-              </dl>
-            </div>
-          </aside>
+          </div>
         </div>
       </section>
 
-      {/* Mobile sticky CTA bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--navy)]/15 bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-3 gap-2">
-          <InquiryDialog
-            projectId={project.id}
-            projectName={project.name}
-            source="mobile-bar-enquire"
-            trigger={
-              <button className="btn-gold w-full !px-2 !py-3 text-[11px]">Enquire</button>
-            }
-          />
-          <InquiryDialog
-            projectId={project.id}
-            projectName={project.name}
-            source="mobile-bar-visit"
-            trigger={
-              <button className="w-full border border-[color:var(--navy)] px-2 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--navy)]">
-                Visit
-              </button>
-            }
-          />
-          <BrochureDialog
-            projectId={project.id}
-            projectName={project.name}
-            brochureUrl={project.brochure_url}
-            trigger={
-              <button className="inline-flex w-full items-center justify-center gap-1 border border-gold/60 px-2 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--navy)]">
-                <Download className="h-3.5 w-3.5" /> Brochure
-              </button>
-            }
-          />
+      {/* ============== KEY FEATURES ============== */}
+      <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-6 md:px-10">
+          <SectionHeading eyebrow="Key Features" title="A holistic community to call home" />
+          <p className="mx-auto mt-6 max-w-3xl text-center text-base leading-[1.85] text-slate-600">
+            {project.name} sits across landscaped grounds with generous open spaces, multiple clubhouses, and 40+ lifestyle
+            amenities — designed to nurture a thriving, multi-generational community.
+          </p>
+          <div className="mt-14 grid grid-cols-2 gap-px bg-[color:var(--pv-line)] md:grid-cols-4">
+            <Stat icon={Home} value={bhkRange} label="Apartments" />
+            <Stat
+              icon={IndianRupee}
+              value={project.price_from ? `₹ ${formatPriceShort(project.price_from as number).replace("*", "")}` : "On Request"}
+              label="Onwards*"
+            />
+            <Stat icon={Building2} value="21" label="Towers" />
+            <Stat icon={Layers} value="S+12" label="Floors" />
+          </div>
         </div>
-      </div>
-      {/* Spacer so mobile bar doesn't cover footer content */}
-      <div aria-hidden className="h-20 lg:hidden" />
-    </>
-  );
-}
+      </section>
 
-function Fact({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
-  return (
-    <div className="flex items-start gap-4">
-      <Icon className="mt-0.5 h-4 w-4 text-gold" strokeWidth={1.4} />
-      <div>
-        <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{label}</dt>
-        <dd className="mt-1 font-display text-lg text-[color:var(--navy)]">{value}</dd>
-      </div>
+      {/* ============== PROJECT TOUR ============== */}
+      <ProjectTour project={project} gallery={gallery} />
+
+      {/* ============== AMENITIES ============== */}
+      {amenities.length > 0 && <Amenities amenities={amenities} cover={project.hero_image ?? gallery[0]} />}
+
+      {/* ============== UNIT PLANS ============== */}
+      <UnitPlans project={project} />
+
+      {/* ============== GALLERY ============== */}
+      {gallery.length > 0 && <Gallery images={gallery} />}
+
+      {/* ============== LOCATION ADVANTAGES ============== */}
+      <LocationAdvantages location={project.location} />
+
+      {/* ============== PROJECT PROGRESS ============== */}
+      <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-6 text-center md:px-10">
+          <SectionHeading eyebrow="Project Progress" title="Track our construction milestones" centered />
+          <a
+            href={project.brochure_url || "#"}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex items-center gap-2 bg-[color:var(--pv-blue)] px-8 py-3.5 text-[12px] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-[color:var(--pv-blue-2)]"
+          >
+            View Construction Status <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      {/* ============== EMI CALCULATOR ============== */}
+      <EMICalculator />
+
+      {/* ============== FAQs ============== */}
+      <FAQs project={project} bhkRange={bhkRange} />
+
+      {/* ============== PROJECT OVERVIEW FOOTER ============== */}
+      <section className="bg-[color:var(--pv-blue)] py-16 text-white md:py-20">
+        <div className="mx-auto max-w-7xl px-6 md:px-10">
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
+            Project Overview
+          </p>
+          <div className="mt-12 grid gap-10 md:grid-cols-4">
+            <OverviewItem label="RERA No" value="TN/29/Building/0008/2023" />
+            <OverviewItem label="Project Status" value={project.status} />
+            <OverviewItem label="Development Size" value="55 Acres Approx." />
+            <OverviewItem label="Possession Date" value={project.handover_date ?? "31-12-2026"} />
+          </div>
+        </div>
+      </section>
+
+      {/* ============== STICKY ENQUIRE / CONTACT (mobile + side) ============== */}
+      <SideCTA project={project} />
     </div>
   );
 }
 
-/* ---------------- Lightbox Gallery ---------------- */
+/* ================================================================
+   Subcomponents
+   ================================================================ */
+
+function SectionHeading({
+  eyebrow,
+  title,
+  centered = true,
+}: {
+  eyebrow: string;
+  title: string;
+  centered?: boolean;
+}) {
+  return (
+    <div className={centered ? "text-center" : ""}>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[color:var(--pv-blue)]">{eyebrow}</p>
+      <h2 className="mt-4 font-display text-3xl font-light text-slate-800 md:text-4xl">{title}</h2>
+      <span className={`mt-5 inline-block h-px w-12 bg-[color:var(--pv-blue)] ${centered ? "" : ""}`} />
+    </div>
+  );
+}
+
+function Stat({ icon: Icon, value, label }: { icon: any; value: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-3 bg-white px-4 py-12 text-center">
+      <Icon className="h-8 w-8 text-[color:var(--pv-blue)]" strokeWidth={1.4} />
+      <div className="font-display text-2xl text-[color:var(--pv-blue)] md:text-3xl">{value}</div>
+      <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-slate-500">{label}</div>
+    </div>
+  );
+}
+
+function OverviewItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/60">{label}</p>
+      <p className="mt-3 font-display text-lg text-white">{value}</p>
+    </div>
+  );
+}
+
+/* -------------------- Project Tour -------------------- */
+function ProjectTour({ project, gallery }: { project: any; gallery: string[] }) {
+  const [tab, setTab] = useState<"walk" | "lifestyle">("walk");
+  const cover = tab === "walk" ? project.hero_image : gallery[0] ?? project.hero_image;
+  return (
+    <section className="bg-white py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="Project Tour" title="Take a closer look" />
+        <div className="mt-10 flex justify-center gap-2">
+          <TabBtn active={tab === "walk"} onClick={() => setTab("walk")}>Walkthrough</TabBtn>
+          <TabBtn active={tab === "lifestyle"} onClick={() => setTab("lifestyle")}>Lifestyle Video</TabBtn>
+        </div>
+        <div className="relative mt-10 aspect-video w-full overflow-hidden bg-slate-200">
+          {cover && <img src={cover} alt="Tour cover" className="absolute inset-0 h-full w-full object-cover" />}
+          <div className="absolute inset-0 grid place-items-center bg-black/25">
+            <button className="grid h-20 w-20 place-items-center rounded-full bg-white/90 text-[color:var(--pv-blue)] shadow-2xl transition-transform hover:scale-110">
+              <Play className="ml-1 h-8 w-8 fill-current" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TabBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative px-7 py-3 text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors ${
+        active ? "text-[color:var(--pv-blue)]" : "text-slate-500 hover:text-[color:var(--pv-blue)]"
+      }`}
+    >
+      {children}
+      {active && <motion.span layoutId="tabline" className="absolute inset-x-3 -bottom-px h-0.5 bg-[color:var(--pv-blue)]" />}
+    </button>
+  );
+}
+
+/* -------------------- Amenities -------------------- */
+function Amenities({ amenities, cover }: { amenities: string[]; cover?: string }) {
+  const [tab, setTab] = useState<"indoor" | "outdoor">("indoor");
+  const [active, setActive] = useState(0);
+  const list = useMemo(() => {
+    const half = Math.ceil(amenities.length / 2);
+    return tab === "indoor" ? amenities.slice(0, half) : amenities.slice(half);
+  }, [amenities, tab]);
+
+  useEffect(() => setActive(0), [tab]);
+  const current = list[active] ?? amenities[0];
+
+  return (
+    <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="Project Amenities" title="Premium amenities" />
+        <div className="mt-10 flex justify-center gap-2">
+          <TabBtn active={tab === "indoor"} onClick={() => setTab("indoor")}>Indoor</TabBtn>
+          <TabBtn active={tab === "outdoor"} onClick={() => setTab("outdoor")}>Outdoor</TabBtn>
+        </div>
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+          <div className="relative aspect-[4/3] overflow-hidden bg-slate-200">
+            {cover && (
+              <motion.img
+                key={current}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                src={cover}
+                alt={current}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+              <p className="font-display text-2xl text-white">{current}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-px bg-[color:var(--pv-line)]">
+            {list.slice(0, 8).map((a, i) => (
+              <button
+                key={a}
+                onClick={() => setActive(i)}
+                className={`flex flex-col items-center gap-3 px-4 py-7 text-center transition-colors ${
+                  active === i ? "bg-[color:var(--pv-blue)] text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <span
+                  className={`grid h-12 w-12 place-items-center rounded-full ${
+                    active === i ? "bg-white/15" : "bg-[color:var(--pv-soft)]"
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full ${active === i ? "bg-white" : "bg-[color:var(--pv-blue)]"}`} />
+                </span>
+                <span className="text-[12px] font-medium">{a}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------- Unit Plans -------------------- */
+function UnitPlans({ project }: { project: any }) {
+  const [tab, setTab] = useState<"master" | "unit">("master");
+  return (
+    <section className="bg-white py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="Unit Plans" title="Well-planned apartment layouts" />
+        <div className="mt-10 flex justify-center gap-2">
+          <TabBtn active={tab === "master"} onClick={() => setTab("master")}>Master Plan</TabBtn>
+          <TabBtn active={tab === "unit"} onClick={() => setTab("unit")}>Unit Plan</TabBtn>
+        </div>
+        <div className="mt-10 aspect-[16/9] overflow-hidden bg-[color:var(--pv-soft)]">
+          {project.hero_image && (
+            <img src={project.hero_image} alt="Plan" className="h-full w-full object-cover opacity-90" />
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------- Gallery (lightbox) -------------------- */
 function Gallery({ images }: { images: string[] }) {
+  const [tab, setTab] = useState<"interior" | "exterior">("interior");
   const [active, setActive] = useState<number | null>(null);
 
   useEffect(() => {
@@ -282,19 +406,30 @@ function Gallery({ images }: { images: string[] }) {
   }, [active, images.length]);
 
   return (
-    <div className="mt-16">
-      <p className="eyebrow"><span className="gold-rule" />Gallery</p>
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        {images.map((src, i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            className={`group relative overflow-hidden bg-muted ${i === 0 ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/3]"}`}
-          >
-            <img src={src} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-[color:var(--navy)]/0 transition-colors duration-300 group-hover:bg-[color:var(--navy)]/30" />
-          </button>
-        ))}
+    <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="Gallery" title="A glimpse of life at its best" />
+        <div className="mt-10 flex justify-center gap-2">
+          <TabBtn active={tab === "interior"} onClick={() => setTab("interior")}>Interior</TabBtn>
+          <TabBtn active={tab === "exterior"} onClick={() => setTab("exterior")}>Exterior</TabBtn>
+        </div>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {images.map((src, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className="group relative aspect-[4/3] overflow-hidden bg-slate-200"
+            >
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-[color:var(--pv-blue)]/0 transition-colors group-hover:bg-[color:var(--pv-blue)]/25" />
+            </button>
+          ))}
+        </div>
       </div>
 
       <AnimatePresence>
@@ -303,169 +438,322 @@ function Gallery({ images }: { images: string[] }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[color:var(--navy)]/95 p-6"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-6"
             onClick={() => setActive(null)}
           >
-            <button
-              onClick={(e) => { e.stopPropagation(); setActive(null); }}
-              className="absolute right-6 top-6 text-cream hover:text-gold"
-              aria-label="Close"
-            >
+            <button onClick={(e) => { e.stopPropagation(); setActive(null); }} className="absolute right-6 top-6 text-white">
               <X className="h-7 w-7" />
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setActive(((active ?? 0) - 1 + images.length) % images.length); }}
-              className="absolute left-6 text-cream hover:text-gold"
-              aria-label="Previous"
+              className="absolute left-6 text-white"
             >
               <ChevronLeft className="h-10 w-10" />
             </button>
             <motion.img
               key={active}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               src={images[active]}
-              alt=""
               onClick={(e) => e.stopPropagation()}
-              className="max-h-[88vh] max-w-[92vw] object-contain shadow-2xl"
+              className="max-h-[88vh] max-w-[92vw] object-contain"
             />
             <button
               onClick={(e) => { e.stopPropagation(); setActive(((active ?? 0) + 1) % images.length); }}
-              className="absolute right-6 text-cream hover:text-gold"
-              aria-label="Next"
+              className="absolute right-6 text-white"
             >
               <ChevronRight className="h-10 w-10" />
             </button>
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] uppercase tracking-[0.3em] text-cream/70">
-              {active + 1} / {images.length}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }
 
-/* ---------------- Floor Plan Tabs ---------------- */
-function FloorPlans({ project }: { project: any }) {
-  const min = project.bedrooms_min ?? 2;
-  const max = project.bedrooms_max ?? Math.max(min, 4);
-  const configs = [];
-  for (let b = min; b <= max; b++) {
-    configs.push({
-      label: `${b} BHK`,
-      area: `${800 + (b - 1) * 320} – ${1100 + (b - 1) * 320} sq.ft`,
-      image: project.hero_image,
-    });
-  }
-  const [tab, setTab] = useState(0);
-  const current = configs[tab];
-
-  return (
-    <div className="mt-20">
-      <p className="eyebrow"><span className="gold-rule" />Floor Plans</p>
-      <h3 className="mt-3 font-display text-2xl text-[color:var(--navy)] md:text-3xl">Choose your residence.</h3>
-
-      <div className="mt-6 flex flex-wrap gap-0 border-b border-border">
-        {configs.map((c, i) => (
-          <button
-            key={c.label}
-            onClick={() => setTab(i)}
-            className={`relative px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] transition-colors ${
-              tab === i ? "text-[color:var(--navy)]" : "text-muted-foreground hover:text-[color:var(--navy)]"
-            }`}
-          >
-            {c.label}
-            {tab === i && (
-              <motion.span
-                layoutId="floorplan-underline"
-                className="absolute inset-x-0 -bottom-px h-0.5 bg-gold"
-              />
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-8 grid gap-8 border border-border bg-card p-6 md:grid-cols-[1.4fr_1fr] md:p-10">
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-          {current?.image && (
-            <img src={current.image} alt={`${current.label} floor plan`} className="h-full w-full object-cover opacity-90" />
-          )}
-          <div className="absolute inset-0 bg-[color:var(--cream)]/40 mix-blend-overlay" />
-        </div>
-        <div className="flex flex-col justify-center">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-gold">Configuration</p>
-          <h4 className="mt-2 font-display text-3xl text-[color:var(--navy)]">{current.label} Residence</h4>
-          <dl className="mt-6 space-y-4 text-sm">
-            <div className="flex justify-between border-b border-border pb-3">
-              <dt className="text-muted-foreground">Carpet Area</dt>
-              <dd className="font-medium text-[color:var(--navy)]">{current.area}</dd>
-            </div>
-            <div className="flex justify-between border-b border-border pb-3">
-              <dt className="text-muted-foreground">Bedrooms</dt>
-              <dd className="font-medium text-[color:var(--navy)]">{tab + min}</dd>
-            </div>
-            <div className="flex justify-between border-b border-border pb-3">
-              <dt className="text-muted-foreground">Bathrooms</dt>
-              <dd className="font-medium text-[color:var(--navy)]">{tab + min}</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-muted-foreground">Balconies</dt>
-              <dd className="font-medium text-[color:var(--navy)]">{Math.max(1, tab)}</dd>
-            </div>
-          </dl>
-          <InquiryDialog
-            projectId={project.id}
-            projectName={project.name}
-            source={`floor-plan-${current.label}`}
-            trigger={<button className="btn-gold mt-8 w-fit">Request Detailed Plan</button>}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- Payment Plan Stepper ---------------- */
-function PaymentPlan() {
-  const steps = [
-    { pct: "10%", label: "On Booking", note: "Reservation & paperwork" },
-    { pct: "20%", label: "Within 30 Days", note: "Sale agreement signed" },
-    { pct: "40%", label: "Construction Milestones", note: "Linked to build progress" },
-    { pct: "30%", label: "On Handover", note: "Possession & registration" },
+/* -------------------- Location Advantages -------------------- */
+function LocationAdvantages({ location }: { location: string }) {
+  const groups = [
+    {
+      title: "Transportation",
+      items: [
+        ["Main Road", "5 mins"],
+        ["Railway Station", "15 mins"],
+        ["Metro Station", "20 mins"],
+        ["International Airport", "30 mins"],
+      ],
+    },
+    {
+      title: "Educational Institutions",
+      items: [
+        ["Global School", "5 mins"],
+        ["International School", "10 mins"],
+        ["Public School", "15 mins"],
+        ["University", "20 mins"],
+      ],
+    },
+    {
+      title: "Healthcare",
+      items: [
+        ["Memorial Hospital", "10 mins"],
+        ["Multi-speciality Hospital", "15 mins"],
+        ["Maternity Cradle", "20 mins"],
+        ["Health City", "20 mins"],
+      ],
+    },
+    {
+      title: "Business & Commercial Hubs",
+      items: [
+        ["IT SEZ", "20 mins"],
+        ["Infocity", "20 mins"],
+        ["Tidel Park", "30 mins"],
+        ["Industrial Estate", "30 mins"],
+      ],
+    },
+    {
+      title: "Retail, Shopping & Entertainment",
+      items: [
+        ["Reliance Smart", "5 mins"],
+        ["Phoenix Marketcity", "20 mins"],
+        ["Grand Square Mall", "20 mins"],
+        ["Marina Mall", "25 mins"],
+      ],
+    },
+    {
+      title: "Culture & Green Spaces",
+      items: [
+        ["Marshland", "5 mins"],
+        ["Forest Reserve", "15 mins"],
+        ["Beach", "35 mins"],
+        ["Heritage Temple", "40 mins"],
+      ],
+    },
   ];
-  return (
-    <div className="mt-20">
-      <p className="eyebrow"><span className="gold-rule" />Payment Plan</p>
-      <h3 className="mt-3 font-display text-2xl text-[color:var(--navy)] md:text-3xl">A structured path to ownership.</h3>
 
-      <div className="relative mt-12">
-        {/* connector line */}
-        <div className="absolute left-0 right-0 top-6 hidden h-px bg-border md:block" />
-        <div className="grid gap-10 md:grid-cols-4 md:gap-6">
-          {steps.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="relative"
-            >
-              <div className="relative z-10 flex h-12 w-12 items-center justify-center bg-[color:var(--navy)] text-cream">
-                <Check className="h-5 w-5 text-gold" strokeWidth={2} />
-              </div>
-              <div className="mt-5">
-                <div className="font-display text-3xl text-[color:var(--navy)]">{s.pct}</div>
-                <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{s.label}</div>
-                <p className="mt-2 text-sm text-muted-foreground">{s.note}</p>
-              </div>
-            </motion.div>
+  return (
+    <section className="bg-white py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="Social Infrastructure" title={`Location advantages — ${location}`} />
+        <div className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {groups.map((g) => (
+            <div key={g.title} className="border-l-2 border-[color:var(--pv-blue)] pl-6">
+              <h4 className="font-display text-lg text-[color:var(--pv-blue)]">{g.title}</h4>
+              <ul className="mt-5 space-y-3 text-sm">
+                {g.items.map(([n, t]) => (
+                  <li key={n} className="flex items-center justify-between border-b border-dashed border-[color:var(--pv-line)] pb-3">
+                    <span className="text-slate-700">{n}</span>
+                    <span className="font-medium text-[color:var(--pv-blue)]">{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+/* -------------------- EMI Calculator -------------------- */
+function EMICalculator() {
+  const [amount, setAmount] = useState(2_000_000);
+  const [rate, setRate] = useState(8.5);
+  const [years, setYears] = useState(20);
+
+  const monthlyRate = rate / 12 / 100;
+  const months = years * 12;
+  const emi =
+    monthlyRate === 0
+      ? amount / months
+      : (amount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+  const total = emi * months;
+
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
+
+  return (
+    <section className="bg-white py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionHeading eyebrow="EMI Calculator" title="Calculate your EMI" />
+        <p className="mx-auto mt-5 max-w-3xl text-center text-xs text-slate-500">
+          *The EMI and interest shown here is indicative. Connect with our sales manager for tailored solutions.
+        </p>
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+          <div className="space-y-10 border border-[color:var(--pv-line)] bg-[color:var(--pv-soft)] p-8 md:p-10">
+            <Slider label="Loan Amount" value={amount} min={500_000} max={20_000_000} step={100_000}
+              format={(v) => `₹ ${fmt(v).replace("₹", "").trim()}`} onChange={setAmount} />
+            <Slider label="Rate of Interest" value={rate} min={2} max={20} step={0.1}
+              format={(v) => `${v.toFixed(1)} %`} onChange={setRate} />
+            <Slider label="Tenure" value={years} min={1} max={30} step={1}
+              format={(v) => `${v} Years`} onChange={setYears} />
+          </div>
+          <div className="bg-[color:var(--pv-blue)] p-10 text-white">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70">Selected Scheme</p>
+            <p className="mt-2 text-sm text-white/80">🇮🇳 INR (₹)</p>
+
+            <div className="mt-10 space-y-7">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">Total amount</p>
+                <p className="mt-1 font-display text-3xl">{fmt(total)}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">Your EMI</p>
+                <p className="mt-1 font-display text-3xl">
+                  {fmt(emi)} <span className="text-sm font-normal text-white/70">/ month</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">Loan Amount</p>
+                <p className="mt-1 font-display text-2xl">{fmt(amount)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Slider({
+  label, value, min, max, step, format, onChange,
+}: {
+  label: string; value: number; min: number; max: number; step: number;
+  format: (v: number) => string; onChange: (v: number) => void;
+}) {
+  return (
+    <div>
+      <div className="flex items-end justify-between">
+        <label className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{label}</label>
+        <span className="font-display text-xl text-[color:var(--pv-blue)]">{format(value)}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        className="mt-4 w-full accent-[color:var(--pv-blue)]"
+      />
+      <div className="mt-2 flex justify-between text-[10px] uppercase tracking-[0.18em] text-slate-400">
+        <span>{format(min)}</span>
+        <span>{format(max)}</span>
+      </div>
     </div>
+  );
+}
+
+/* -------------------- FAQs -------------------- */
+function FAQs({ project, bhkRange }: { project: any; bhkRange: string }) {
+  const faqs = [
+    {
+      q: `What types of apartments are available at ${project.name}?`,
+      a: `${project.name} offers a range of ${bhkRange} residences with contemporary design, modern kitchens, spacious interiors and generous balconies designed for sophisticated urban living.`,
+    },
+    {
+      q: "What amenities are included with the apartments?",
+      a: "Residents enjoy access to two clubhouses, sports facilities, landscaped gardens, a dedicated yoga room, multiple sports courts and expansive green open spaces designed for a complete lifestyle experience.",
+    },
+    {
+      q: `How is the connectivity and location advantage near ${project.location}?`,
+      a: `${project.location} is one of the fastest-growing residential corridors with excellent connectivity to major IT hubs, business districts, schools, hospitals and shopping centres, with upcoming metro connectivity.`,
+    },
+    {
+      q: "Are financing options available?",
+      a: "Yes — we work with leading banks and financial institutions to provide competitive home loan options with attractive interest rates and flexible payment schedules.",
+    },
+    {
+      q: "What is the construction quality and delivery timeline?",
+      a: "The project maintains the highest standards of construction quality with premium materials and modern building techniques, delivered on schedule as a RERA-registered development.",
+    },
+    {
+      q: "How can I schedule a site visit?",
+      a: "Contact our sales team to arrange a personalised tour at your preferred time. Our consultants will showcase apartment configurations, amenities and walk you through the booking process end-to-end.",
+    },
+  ];
+
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
+      <div className="mx-auto max-w-4xl px-6 md:px-10">
+        <SectionHeading eyebrow="FAQs" title="Frequently asked questions" />
+        <div className="mt-12 divide-y divide-[color:var(--pv-line)] border-y border-[color:var(--pv-line)] bg-white">
+          {faqs.map((f, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={i}>
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-center justify-between gap-6 px-6 py-6 text-left md:px-8"
+                >
+                  <span className="font-display text-base text-[color:var(--pv-blue)] md:text-lg">{f.q}</span>
+                  <span className="grid h-8 w-8 shrink-0 place-items-center border border-[color:var(--pv-blue)] text-[color:var(--pv-blue)]">
+                    {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-6 pb-6 text-sm leading-[1.85] text-slate-600 md:px-8">{f.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------- Floating side / mobile CTA -------------------- */
+function SideCTA({ project }: { project: any }) {
+  return (
+    <>
+      {/* Desktop side rail */}
+      <div className="fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 lg:block">
+        <InquiryDialog
+          projectId={project.id}
+          projectName={project.name}
+          source="side-rail"
+          trigger={
+            <button
+              className="origin-bottom-right -rotate-90 bg-[color:var(--pv-blue)] px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-xl transition-colors hover:bg-[color:var(--pv-blue-2)]"
+              style={{ transformOrigin: "100% 100%" }}
+            >
+              Enquire Now
+            </button>
+          }
+        />
+      </div>
+
+      {/* Mobile sticky bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-[color:var(--pv-line)] bg-white shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.18)] lg:hidden">
+        <a
+          href="tel:+910000000000"
+          className="flex items-center justify-center gap-2 border-r border-[color:var(--pv-line)] py-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-[color:var(--pv-blue)]"
+        >
+          <Phone className="h-4 w-4" /> Call us
+        </a>
+        <a
+          href="https://wa.me/910000000000?text=Hi"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center justify-center gap-2 bg-[color:var(--pv-blue)] py-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
+        >
+          <MessageCircle className="h-4 w-4" /> WhatsApp
+        </a>
+      </div>
+      <div aria-hidden className="h-16 lg:hidden" />
+    </>
   );
 }
