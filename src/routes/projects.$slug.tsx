@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MapPin, ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
+  ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
   Building2, Layers, Home, IndianRupee, Plus, Minus,
   Train, GraduationCap, HeartPulse, Briefcase, ShoppingBag, Trees,
 } from "lucide-react";
