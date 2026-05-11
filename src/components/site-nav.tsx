@@ -23,6 +23,18 @@ export function SiteNav() {
     return idx === -1 ? 0 : idx;
   }, [pathname]);
 
+  const isRTL = lang === "AR";
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dir = isRTL ? "rtl" : "ltr";
+    root.lang = lang === "AR" ? "ar" : lang === "ZH" ? "zh" : "en";
+    return () => {
+      root.dir = "ltr";
+      root.lang = "en";
+    };
+  }, [isRTL, lang]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
@@ -46,6 +58,7 @@ export function SiteNav() {
 
         <nav className="hidden lg:block">
           <SlideTabs
+            key={isRTL ? "rtl" : "ltr"}
             selectedIndex={selectedIndex}
             tabs={links.map((l) => ({
               label: l.label,
