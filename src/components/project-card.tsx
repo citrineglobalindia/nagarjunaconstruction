@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { InquiryDialog } from "./inquiry-dialog";
+import { useIsRTL } from "@/hooks/use-rtl";
 
 export type ProjectCardProps = {
   slug: string;
@@ -46,6 +47,8 @@ const itemVariants = {
 };
 
 export function ProjectCard(p: ProjectCardProps) {
+  const isRTL = useIsRTL();
+  const dir = isRTL ? -1 : 1;
   return (
     <motion.article
       variants={cardVariants}
@@ -84,17 +87,21 @@ export function ProjectCard(p: ProjectCardProps) {
 
         {/* Ribbon */}
         <motion.div
-          initial={{ x: 40, opacity: 0 }}
+          initial={{ x: 40 * dir, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.25 }}
-          className="pointer-events-none absolute -bottom-3 right-0 flex"
+          className={`pointer-events-none absolute -bottom-3 flex ${isRTL ? "left-0" : "right-0"}`}
         >
           <span className="relative bg-[color:var(--navy)] px-7 py-3 text-[12px] font-medium tracking-wide text-cream">
             {p.status}
             <span
-              className="absolute -bottom-2 right-0 h-2 w-3 bg-[color:var(--navy)]/70"
-              style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%)" }}
+              className={`absolute -bottom-2 h-2 w-3 bg-[color:var(--navy)]/70 ${isRTL ? "left-0" : "right-0"}`}
+              style={{
+                clipPath: isRTL
+                  ? "polygon(0 0, 100% 0, 0 100%)"
+                  : "polygon(0 0, 100% 0, 100% 100%)",
+              }}
             />
           </span>
         </motion.div>
@@ -152,6 +159,7 @@ export function ProjectCard(p: ProjectCardProps) {
 }
 
 function CTAButton({ children }: { children: React.ReactNode }) {
+  const isRTL = useIsRTL();
   return (
     <motion.button
       whileHover={{ backgroundColor: "rgba(10,26,47,0.92)" }}
@@ -160,7 +168,7 @@ function CTAButton({ children }: { children: React.ReactNode }) {
       className="relative overflow-hidden bg-[color:var(--navy)] px-4 py-4 text-[13px] font-medium tracking-wide text-cream"
     >
       <motion.span
-        className="absolute inset-0 origin-left bg-gold/20"
+        className={`absolute inset-0 bg-gold/20 ${isRTL ? "origin-right" : "origin-left"}`}
         initial={{ scaleX: 0 }}
         whileHover={{ scaleX: 1 }}
         transition={{ duration: 0.5, ease: EASE }}
