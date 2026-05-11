@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { InquiryDialog } from "./inquiry-dialog";
+import { useIsRTL } from "@/hooks/use-rtl";
 
 export type ProjectCardProps = {
   slug: string;
