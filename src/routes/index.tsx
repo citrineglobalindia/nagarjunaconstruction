@@ -145,9 +145,9 @@ function HomePage() {
       </section>
 
       {/* FEATURED */}
-      <section className="bg-background py-24 md:py-32">
+      <section className="bg-background py-32 md:py-44">
         <div className="container-luxe">
-          <div className="flex flex-col items-end justify-between gap-6 md:flex-row">
+          <div className="flex flex-col items-end justify-between gap-10 md:flex-row md:gap-12">
             <SectionHeading
               eyebrow="Featured Developments"
               title="A portfolio of singular addresses"
@@ -157,7 +157,7 @@ function HomePage() {
               View All Projects →
             </Link>
           </div>
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-20 grid gap-10 md:mt-24 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
             {featured.map((p) => <ProjectCard key={p.slug} {...p} />)}
           </div>
         </div>
