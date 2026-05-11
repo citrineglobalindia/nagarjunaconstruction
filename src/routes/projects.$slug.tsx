@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MapPin, Calendar, Wallet, Bed, ArrowLeft, X, ChevronLeft, ChevronRight,
+  MapPin, Calendar, Wallet, Bed, ArrowLeft, X, ChevronLeft, ChevronRight, Download,
   Dumbbell, Waves, Trees, Shield, Car, Wifi, Utensils, Sparkles,
   Users, Baby, Building2, FlowerIcon, Check,
 } from "lucide-react";
 import { InquiryDialog } from "@/components/inquiry-dialog";
+import { BrochureDialog } from "@/components/brochure-dialog";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetail,
@@ -157,6 +158,16 @@ function ProjectDetail() {
                 trigger={
                   <button className="mt-3 w-full border border-[color:var(--navy)] bg-transparent px-4 py-3.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-[color:var(--navy)] transition-colors hover:bg-[color:var(--navy)] hover:text-cream">
                     Book a Site Visit
+                  </button>
+                }
+              />
+              <BrochureDialog
+                projectId={project.id}
+                projectName={project.name}
+                brochureUrl={project.brochure_url}
+                trigger={
+                  <button className="mt-3 inline-flex w-full items-center justify-center gap-2 border border-gold/60 bg-transparent px-4 py-3.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-[color:var(--navy)] transition-colors hover:bg-gold hover:text-[color:var(--navy)]">
+                    <Download className="h-4 w-4" /> Download Brochure
                   </button>
                 }
               />
