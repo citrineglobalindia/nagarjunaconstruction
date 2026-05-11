@@ -161,6 +161,16 @@ function ProjectDetail() {
                   </button>
                 }
               />
+              <BrochureDialog
+                projectId={project.id}
+                projectName={project.name}
+                brochureUrl={project.brochure_url}
+                trigger={
+                  <button className="mt-3 inline-flex w-full items-center justify-center gap-2 border border-gold/60 bg-transparent px-4 py-3.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-[color:var(--navy)] transition-colors hover:bg-gold hover:text-[color:var(--navy)]">
+                    <Download className="h-4 w-4" /> Download Brochure
+                  </button>
+                }
+              />
             </div>
           </aside>
         </div>
