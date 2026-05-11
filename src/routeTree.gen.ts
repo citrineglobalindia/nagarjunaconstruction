@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
@@ -19,6 +22,21 @@ import { Route as AboutVisionMissionRouteImport } from './routes/about.vision-mi
 import { Route as AboutTeamRouteImport } from './routes/about.team'
 import { Route as AboutCompanyRouteImport } from './routes/about.company'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -70,6 +88,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRouteWithChildren
   '/blogs': typeof BlogsRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/about/company': typeof AboutCompanyRoute
   '/about/team': typeof AboutTeamRoute
   '/about/vision-mission': typeof AboutVisionMissionRoute
@@ -81,6 +102,9 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRouteWithChildren
   '/blogs': typeof BlogsRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/about/company': typeof AboutCompanyRoute
   '/about/team': typeof AboutTeamRoute
   '/about/vision-mission': typeof AboutVisionMissionRoute
@@ -93,6 +117,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRouteWithChildren
   '/blogs': typeof BlogsRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/about/company': typeof AboutCompanyRoute
   '/about/team': typeof AboutTeamRoute
   '/about/vision-mission': typeof AboutVisionMissionRoute
@@ -106,6 +133,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/contact'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/about/company'
     | '/about/team'
     | '/about/vision-mission'
@@ -117,6 +147,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/contact'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/about/company'
     | '/about/team'
     | '/about/vision-mission'
@@ -128,6 +161,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/contact'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/about/company'
     | '/about/team'
     | '/about/vision-mission'
@@ -140,12 +176,36 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRouteWithChildren
   BlogsRoute: typeof BlogsRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -231,6 +291,9 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRouteWithChildren,
   BlogsRoute: BlogsRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }

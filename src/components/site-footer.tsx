@@ -42,9 +42,9 @@ export function SiteFooter() {
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-cream/10 pt-8 text-xs text-cream/50 md:flex-row md:items-center">
           <div>© {new Date().getFullYear()} Nagarjuna Corporation. All rights reserved.</div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-gold">Privacy</a>
-            <a href="#" className="hover:text-gold">Terms</a>
-            <a href="#" className="hover:text-gold">Cookies</a>
+            <Link to="/privacy" className="hover:text-gold">Privacy</Link>
+            <Link to="/terms" className="hover:text-gold">Terms</Link>
+            <Link to="/cookies" className="hover:text-gold">Cookies</Link>
           </div>
         </div>
       </div>
