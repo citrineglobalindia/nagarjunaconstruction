@@ -21,7 +21,13 @@ export const Route = createFileRoute("/projects/")({
 });
 
 const TYPES = ["Apartment", "Villa", "Townhouse", "Branded Residence", "Hotel"];
-const STATUSES = ["Ready", "Off-Plan", "Under Construction"];
+// Display labels mapped to underlying DB status values
+const STATUS_FILTERS: { label: string; values: string[] }[] = [
+  { label: "Ongoing", values: ["Under Construction"] },
+  { label: "Completed", values: ["Ready"] },
+  { label: "Upcoming", values: ["Off-Plan"] },
+];
+const STATUSES = STATUS_FILTERS.map((s) => s.label);
 const BEDROOMS = ["1+", "2+", "3+", "4+", "5+"];
 
 function ProjectsPage() {
