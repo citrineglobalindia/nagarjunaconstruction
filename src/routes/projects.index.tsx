@@ -4,9 +4,10 @@ import { useMemo } from "react";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ProjectCard } from "@/components/project-card";
-import { SectionHeading } from "@/components/section-heading";
+import ShaderHero from "@/components/ui/animated-shader-hero";
 
 const searchSchema = z.object({
   type: z.string().optional(),
