@@ -260,7 +260,7 @@ export function SiteNav() {
                   </div>
                 );
               })}
-              <InquiryDialog trigger={<button className="btn-gold mt-4 w-full">Register Interest</button>} />
+              
             </div>
           </motion.div>
         )}
