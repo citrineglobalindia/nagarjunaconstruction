@@ -92,29 +92,18 @@ function ProjectsPage() {
               ))}
             </div>
           </LayoutGroup>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.18em]">
-            <FilterSelect label="Type" value={search.type} options={TYPES} onChange={(v) => setFilter("type", v)} />
-            <FilterSelect label="Bedrooms" value={search.bedrooms} options={BEDROOMS} onChange={(v) => setFilter("bedrooms", v)} />
-            {(search.type || search.status || search.bedrooms) && (
+          {(search.type || search.status || search.bedrooms) && (
+            <div className="mt-4 flex justify-center">
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={() => navigate({ search: {} })}
-                className="text-gold hover:underline"
+                className="text-[11px] uppercase tracking-[0.18em] text-gold hover:underline"
               >
                 Clear
               </motion.button>
-            )}
-            <motion.span
-              key={filtered.length}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-muted-foreground"
-            >
-              {filtered.length} {filtered.length === 1 ? "residence" : "residences"}
-            </motion.span>
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
