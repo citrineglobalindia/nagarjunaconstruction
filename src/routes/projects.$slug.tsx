@@ -290,7 +290,7 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
   return (
     <button
       onClick={onClick}
-      className={`rounded-full px-7 py-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+      className={`whitespace-nowrap rounded-full px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors md:px-7 md:text-[12px] md:tracking-[0.18em] ${
         active
           ? "bg-[color:var(--pv-blue)] text-white"
           : "bg-transparent text-[color:var(--pv-blue)] hover:bg-[color:var(--pv-blue)]/5"
