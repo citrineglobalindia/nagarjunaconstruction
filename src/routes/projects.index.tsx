@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { ProjectCard } from "@/components/project-card";
 import { SectionHeading } from "@/components/section-heading";
