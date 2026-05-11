@@ -109,7 +109,7 @@ function ProjectsPage() {
         </div>
       </section>
 
-      <section className="bg-background py-16 md:py-24">
+      <section id="collection" className="bg-background py-16 md:py-24 scroll-mt-24">
         <div className="container-luxe">
           {isLoading ? (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
