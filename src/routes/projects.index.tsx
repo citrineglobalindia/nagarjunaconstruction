@@ -4,9 +4,10 @@ import { useMemo } from "react";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ProjectCard } from "@/components/project-card";
-import { SectionHeading } from "@/components/section-heading";
+import ShaderHero from "@/components/ui/animated-shader-hero";
 
 const searchSchema = z.object({
   type: z.string().optional(),
@@ -57,16 +58,17 @@ function ProjectsPage() {
 
   return (
     <>
-      <section className="bg-[color:var(--navy)] pb-16 pt-36 md:pt-44">
-        <div className="container-luxe">
-          <SectionHeading
-            invert
-            eyebrow="The Collection"
-            title="Discover our world of residences"
-            subtitle="From serene Maldivian retreats to skyline towers in Dubai and London, every address is selected with intention."
-          />
-        </div>
-      </section>
+      <ShaderHero
+        trustBadge={{ text: "The Nagarjuna Collection", icons: [<Sparkles className="h-3.5 w-3.5" key="s" />] }}
+        headline={{ line1: "Iconic Living.", line2: "Crafted for the Few." }}
+        subtitle="From serene retreats to skyline towers, every address is selected with intention — a private portfolio of residences for those who value rarity over scale."
+        buttons={{
+          primary: { text: "Explore Residences", onClick: () => document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" }) },
+          secondary: { text: "Private Consultation", onClick: () => navigate({ to: "/contact" }) },
+        }}
+        className="pt-24"
+      />
+
 
       {/* Status filter pills */}
       <section className="sticky top-20 z-30 border-b border-border bg-background/95 backdrop-blur">
@@ -107,7 +109,7 @@ function ProjectsPage() {
         </div>
       </section>
 
-      <section className="bg-background py-16 md:py-24">
+      <section id="collection" className="bg-background py-16 md:py-24 scroll-mt-24">
         <div className="container-luxe">
           {isLoading ? (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
