@@ -88,6 +88,7 @@ export type Database = {
           gallery: Json | null
           handover_date: string | null
           hero_image: string | null
+          hero_video: string | null
           id: string
           location: string
           name: string
@@ -107,6 +108,7 @@ export type Database = {
           gallery?: Json | null
           handover_date?: string | null
           hero_image?: string | null
+          hero_video?: string | null
           id?: string
           location: string
           name: string
@@ -126,6 +128,7 @@ export type Database = {
           gallery?: Json | null
           handover_date?: string | null
           hero_image?: string | null
+          hero_video?: string | null
           id?: string
           location?: string
           name?: string
