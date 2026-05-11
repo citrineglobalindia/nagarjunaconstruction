@@ -71,8 +71,26 @@ function ProjectDetail() {
     <>
       {/* Hero */}
       <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden bg-[color:var(--navy)]">
-        <img src={project.hero_image ?? ""} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--navy)]/95 via-[color:var(--navy)]/35 to-[color:var(--navy)]/45" />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={project.hero_image ?? undefined}
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source
+            src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-luxury-villa-1572/1080p.mp4"
+            type="video/mp4"
+          />
+          <source
+            src="https://cdn.coverr.co/videos/coverr-aerial-shot-of-dubai-marina-2633/1080p.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--navy)]/95 via-[color:var(--navy)]/40 to-[color:var(--navy)]/55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--navy)]/60 via-transparent to-transparent" />
         <div className="container-luxe relative z-10 flex h-full flex-col justify-end pb-16 text-cream">
           <Link to="/projects" className="mb-8 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-cream/70 hover:text-gold">
             <ArrowLeft className="h-3 w-3" /> Back to Collection
