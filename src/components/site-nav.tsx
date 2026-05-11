@@ -132,7 +132,7 @@ export function SiteNav() {
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
           ? "backdrop-blur-md bg-[color:var(--navy)]/90 shadow-[0_1px_0_0_color-mix(in_oklab,var(--gold)_25%,transparent)]"
-          : "bg-transparent"
+          : "bg-gradient-to-b from-[color:var(--navy)]/75 via-[color:var(--navy)]/40 to-transparent backdrop-blur-[2px]"
       }`}
     >
       <div className="container-luxe grid h-20 grid-cols-[1fr_auto_1fr] items-center gap-4">
