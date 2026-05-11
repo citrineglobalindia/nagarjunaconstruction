@@ -47,6 +47,8 @@ const itemVariants = {
 };
 
 export function ProjectCard(p: ProjectCardProps) {
+  const isRTL = useIsRTL();
+  const dir = isRTL ? -1 : 1;
   return (
     <motion.article
       variants={cardVariants}
