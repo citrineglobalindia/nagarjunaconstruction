@@ -1,18 +1,27 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import { InquiryDialog } from "./inquiry-dialog";
+import { SlideTabs } from "./ui/slide-tabs";
 
 const links = [
+  { to: "/", label: "Home" },
   { to: "/projects", label: "Projects" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
-];
+] as const;
 
 export function SiteNav() {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState("EN");
+
+  const selectedIndex = useMemo(() => {
+    const idx = links.findIndex((l) => (l.to === "/" ? pathname === "/" : pathname.startsWith(l.to)));
+    return idx === -1 ? 0 : idx;
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -35,17 +44,14 @@ export function SiteNav() {
           <span className="hidden text-[10px] uppercase tracking-[0.32em] text-gold sm:inline">Corporation</span>
         </Link>
 
-        <nav className="hidden items-center gap-10 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-[11px] font-medium uppercase tracking-[0.24em] text-cream/85 transition-colors hover:text-gold"
-              activeProps={{ className: "text-gold" }}
-            >
-              {l.label}
-            </Link>
-          ))}
+        <nav className="hidden lg:block">
+          <SlideTabs
+            selectedIndex={selectedIndex}
+            tabs={links.map((l) => ({
+              label: l.label,
+              onClick: () => navigate({ to: l.to }),
+            }))}
+          />
         </nav>
 
         <div className="hidden items-center gap-5 lg:flex">
