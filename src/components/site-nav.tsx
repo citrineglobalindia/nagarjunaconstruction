@@ -58,6 +58,7 @@ export function SiteNav() {
 
         <nav className="hidden lg:block">
           <SlideTabs
+            key={isRTL ? "rtl" : "ltr"}
             selectedIndex={selectedIndex}
             tabs={links.map((l) => ({
               label: l.label,
