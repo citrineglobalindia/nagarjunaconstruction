@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MapPin, Calendar, Wallet, Bed, ArrowLeft, X, ChevronLeft, ChevronRight,
+  MapPin, Calendar, Wallet, Bed, ArrowLeft, X, ChevronLeft, ChevronRight, Download,
   Dumbbell, Waves, Trees, Shield, Car, Wifi, Utensils, Sparkles,
   Users, Baby, Building2, FlowerIcon, Check,
 } from "lucide-react";
