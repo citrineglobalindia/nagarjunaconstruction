@@ -487,6 +487,7 @@ function LocationAdvantages({ location }: { location: string }) {
   const groups = [
     {
       title: "Transportation",
+      icon: Train,
       items: [
         ["Main Road", "5 mins"],
         ["Railway Station", "15 mins"],
@@ -496,6 +497,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Educational Institutions",
+      icon: GraduationCap,
       items: [
         ["Global School", "5 mins"],
         ["International School", "10 mins"],
@@ -505,6 +507,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Healthcare",
+      icon: HeartPulse,
       items: [
         ["Memorial Hospital", "10 mins"],
         ["Multi-speciality Hospital", "15 mins"],
@@ -514,6 +517,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Business & Commercial Hubs",
+      icon: Briefcase,
       items: [
         ["IT SEZ", "20 mins"],
         ["Infocity", "20 mins"],
@@ -523,6 +527,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Retail, Shopping & Entertainment",
+      icon: ShoppingBag,
       items: [
         ["Reliance Smart", "5 mins"],
         ["Phoenix Marketcity", "20 mins"],
@@ -532,6 +537,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Culture & Green Spaces",
+      icon: Trees,
       items: [
         ["Marshland", "5 mins"],
         ["Forest Reserve", "15 mins"],
@@ -544,21 +550,29 @@ function LocationAdvantages({ location }: { location: string }) {
   return (
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading eyebrow="Social Infrastructure" title={`Location advantages — ${location}`} />
-        <div className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {groups.map((g) => (
-            <div key={g.title} className="border-l-2 border-[color:var(--pv-blue)] pl-6">
-              <h4 className="font-display text-lg text-[color:var(--pv-blue)]">{g.title}</h4>
-              <ul className="mt-5 space-y-3 text-sm">
-                {g.items.map(([n, t]) => (
-                  <li key={n} className="flex items-center justify-between border-b border-dashed border-[color:var(--pv-line)] pb-3">
-                    <span className="text-slate-700">{n}</span>
-                    <span className="font-medium text-[color:var(--pv-blue)]">{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <SectionHeading eyebrow="Social Infrastructure" title={`Location Advantages — ${location}`} />
+        <div className="mt-14 grid gap-px bg-[color:var(--pv-line)] md:grid-cols-2 lg:grid-cols-3">
+          {groups.map((g) => {
+            const Icon = g.icon;
+            return (
+              <div key={g.title} className="bg-white p-7">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-[color:var(--pv-soft)]">
+                    <Icon className="h-5 w-5 text-[color:var(--pv-blue)]" strokeWidth={1.6} />
+                  </span>
+                  <h4 className="font-display text-base font-medium text-[color:var(--pv-blue)]">{g.title}</h4>
+                </div>
+                <ul className="mt-5 space-y-3 text-sm">
+                  {g.items.map(([n, t]) => (
+                    <li key={n} className="flex items-center justify-between gap-4 border-b border-dashed border-[color:var(--pv-line)] pb-3 last:border-0">
+                      <span className="text-slate-700">{n}</span>
+                      <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--pv-blue)]">{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
