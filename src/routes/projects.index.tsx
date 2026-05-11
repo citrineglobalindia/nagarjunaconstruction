@@ -130,3 +130,18 @@ function FilterSelect({ label, value, options, onChange }: { label: string; valu
     </div>
   );
 }
+
+function StatusPill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`min-w-[150px] border border-[color:var(--navy)] px-8 py-3 text-[14px] font-medium tracking-wide transition-colors ${
+        active
+          ? "bg-[color:var(--navy)] text-cream"
+          : "bg-transparent text-[color:var(--navy)] hover:bg-[color:var(--navy)]/5"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
