@@ -49,7 +49,10 @@ function ProjectsPage() {
   const filtered = useMemo(() => {
     return projects.filter((p) => {
       if (search.type && p.type !== search.type) return false;
-      if (search.status && p.status !== search.status) return false;
+      if (search.status) {
+        const filter = STATUS_FILTERS.find((s) => s.label === search.status);
+        if (filter && !filter.values.includes(p.status)) return false;
+      }
       if (search.bedrooms) {
         const min = parseInt(search.bedrooms);
         if ((p.bedrooms_min ?? 0) < min) return false;
