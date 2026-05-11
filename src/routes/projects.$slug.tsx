@@ -271,7 +271,7 @@ function ProjectTour({ project, gallery }: { project: any; gallery: string[] }) 
         <TabGroup>
           <TabBtn active={tab === "walk"} onClick={() => setTab("walk")}>Walkthrough</TabBtn>
           <TabBtn active={tab === "lifestyle"} onClick={() => setTab("lifestyle")}>Lifestyle Video</TabBtn>
-        </div>
+        </TabGroup>
         <div className="relative mt-10 aspect-video w-full overflow-hidden bg-slate-200">
           {cover && <img src={cover} alt="Tour cover" className="absolute inset-0 h-full w-full object-cover" />}
           <div className="absolute inset-0 grid place-items-center bg-black/25">
@@ -329,7 +329,7 @@ function Amenities({ amenities, cover }: { amenities: string[]; cover?: string }
         <TabGroup>
           <TabBtn active={tab === "indoor"} onClick={() => setTab("indoor")}>Indoor</TabBtn>
           <TabBtn active={tab === "outdoor"} onClick={() => setTab("outdoor")}>Outdoor</TabBtn>
-        </div>
+        </TabGroup>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div className="relative aspect-[4/3] overflow-hidden bg-slate-200">
@@ -384,7 +384,7 @@ function UnitPlans({ project }: { project: any }) {
         <TabGroup>
           <TabBtn active={tab === "master"} onClick={() => setTab("master")}>Master Plan</TabBtn>
           <TabBtn active={tab === "unit"} onClick={() => setTab("unit")}>Unit Plan</TabBtn>
-        </div>
+        </TabGroup>
         <div className="mt-10 aspect-[16/9] overflow-hidden bg-[color:var(--pv-soft)]">
           {project.hero_image && (
             <img src={project.hero_image} alt="Plan" className="h-full w-full object-cover opacity-90" />
@@ -422,7 +422,7 @@ function Gallery({ images }: { images: string[] }) {
         <TabGroup>
           <TabBtn active={tab === "interior"} onClick={() => setTab("interior")}>Interior</TabBtn>
           <TabBtn active={tab === "exterior"} onClick={() => setTab("exterior")}>Exterior</TabBtn>
-        </div>
+        </TabGroup>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {images.map((src, i) => (
             <button
