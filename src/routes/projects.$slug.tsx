@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MapPin, ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
+  ChevronRight, ChevronLeft, X, Download, Play, Phone, MessageCircle,
   Building2, Layers, Home, IndianRupee, Plus, Minus,
+  Train, GraduationCap, HeartPulse, Briefcase, ShoppingBag, Trees,
 } from "lucide-react";
 import { InquiryDialog } from "@/components/inquiry-dialog";
 import { BrochureDialog } from "@/components/brochure-dialog";
@@ -79,15 +80,15 @@ function ProjectDetail() {
         {project.hero_image && (
           <img src={project.hero_image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/30" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-16 md:px-16 md:pb-20">
-          <h1 className="font-display text-5xl font-light text-white md:text-7xl">{project.name}</h1>
-          <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-20 md:px-16 md:pb-24">
+          <h1 className="font-display text-5xl font-light tracking-tight text-white md:text-7xl">{project.name}</h1>
+          <p className="mt-4 max-w-2xl text-sm text-white/90 md:text-base">
             Near {project.location} | {bhkRange}
             {project.price_from ? ` | ${formatPriceShort(project.price_from as number)} Onwards*` : ""}
           </p>
         </div>
-        <div className="absolute bottom-4 left-6 text-[10px] uppercase tracking-[0.3em] text-white/60 md:left-16">
+        <div className="absolute bottom-5 left-6 text-[10px] uppercase tracking-[0.32em] text-white/60 md:left-16">
           Artistic Impression
         </div>
       </section>
@@ -235,9 +236,8 @@ function SectionHeading({
 }) {
   return (
     <div className={centered ? "text-center" : ""}>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[color:var(--pv-blue)]">{eyebrow}</p>
-      <h2 className="mt-4 font-display text-3xl font-light text-slate-800 md:text-4xl">{title}</h2>
-      <span className={`mt-5 inline-block h-px w-12 bg-[color:var(--pv-blue)] ${centered ? "" : ""}`} />
+      <h3 className="font-display text-xl font-medium text-[color:var(--pv-blue)] md:text-2xl">{eyebrow}</h3>
+      <h2 className="mt-2 font-display text-2xl font-light text-slate-700 md:text-[28px]">{title}</h2>
     </div>
   );
 }
@@ -269,10 +269,10 @@ function ProjectTour({ project, gallery }: { project: any; gallery: string[] }) 
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Project Tour" title="Take a closer look" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "walk"} onClick={() => setTab("walk")}>Walkthrough</TabBtn>
           <TabBtn active={tab === "lifestyle"} onClick={() => setTab("lifestyle")}>Lifestyle Video</TabBtn>
-        </div>
+        </TabGroup>
         <div className="relative mt-10 aspect-video w-full overflow-hidden bg-slate-200">
           {cover && <img src={cover} alt="Tour cover" className="absolute inset-0 h-full w-full object-cover" />}
           <div className="absolute inset-0 grid place-items-center bg-black/25">
@@ -290,13 +290,24 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
   return (
     <button
       onClick={onClick}
-      className={`relative px-7 py-3 text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors ${
-        active ? "text-[color:var(--pv-blue)]" : "text-slate-500 hover:text-[color:var(--pv-blue)]"
+      className={`rounded-full px-7 py-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+        active
+          ? "bg-[color:var(--pv-blue)] text-white"
+          : "bg-transparent text-[color:var(--pv-blue)] hover:bg-[color:var(--pv-blue)]/5"
       }`}
     >
       {children}
-      {active && <motion.span layoutId="tabline" className="absolute inset-x-3 -bottom-px h-0.5 bg-[color:var(--pv-blue)]" />}
     </button>
+  );
+}
+
+function TabGroup({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-10 flex justify-center">
+      <div className="inline-flex items-center gap-1 rounded-full border border-[color:var(--pv-line)] bg-white p-1">
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -316,10 +327,10 @@ function Amenities({ amenities, cover }: { amenities: string[]; cover?: string }
     <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Project Amenities" title="Premium amenities" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "indoor"} onClick={() => setTab("indoor")}>Indoor</TabBtn>
           <TabBtn active={tab === "outdoor"} onClick={() => setTab("outdoor")}>Outdoor</TabBtn>
-        </div>
+        </TabGroup>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div className="relative aspect-[4/3] overflow-hidden bg-slate-200">
@@ -371,10 +382,10 @@ function UnitPlans({ project }: { project: any }) {
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Unit Plans" title="Well-planned apartment layouts" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "master"} onClick={() => setTab("master")}>Master Plan</TabBtn>
           <TabBtn active={tab === "unit"} onClick={() => setTab("unit")}>Unit Plan</TabBtn>
-        </div>
+        </TabGroup>
         <div className="mt-10 aspect-[16/9] overflow-hidden bg-[color:var(--pv-soft)]">
           {project.hero_image && (
             <img src={project.hero_image} alt="Plan" className="h-full w-full object-cover opacity-90" />
@@ -409,10 +420,10 @@ function Gallery({ images }: { images: string[] }) {
     <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Gallery" title="A glimpse of life at its best" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "interior"} onClick={() => setTab("interior")}>Interior</TabBtn>
           <TabBtn active={tab === "exterior"} onClick={() => setTab("exterior")}>Exterior</TabBtn>
-        </div>
+        </TabGroup>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {images.map((src, i) => (
             <button
@@ -476,6 +487,7 @@ function LocationAdvantages({ location }: { location: string }) {
   const groups = [
     {
       title: "Transportation",
+      icon: Train,
       items: [
         ["Main Road", "5 mins"],
         ["Railway Station", "15 mins"],
@@ -485,6 +497,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Educational Institutions",
+      icon: GraduationCap,
       items: [
         ["Global School", "5 mins"],
         ["International School", "10 mins"],
@@ -494,6 +507,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Healthcare",
+      icon: HeartPulse,
       items: [
         ["Memorial Hospital", "10 mins"],
         ["Multi-speciality Hospital", "15 mins"],
@@ -503,6 +517,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Business & Commercial Hubs",
+      icon: Briefcase,
       items: [
         ["IT SEZ", "20 mins"],
         ["Infocity", "20 mins"],
@@ -512,6 +527,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Retail, Shopping & Entertainment",
+      icon: ShoppingBag,
       items: [
         ["Reliance Smart", "5 mins"],
         ["Phoenix Marketcity", "20 mins"],
@@ -521,6 +537,7 @@ function LocationAdvantages({ location }: { location: string }) {
     },
     {
       title: "Culture & Green Spaces",
+      icon: Trees,
       items: [
         ["Marshland", "5 mins"],
         ["Forest Reserve", "15 mins"],
@@ -533,21 +550,29 @@ function LocationAdvantages({ location }: { location: string }) {
   return (
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading eyebrow="Social Infrastructure" title={`Location advantages — ${location}`} />
-        <div className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {groups.map((g) => (
-            <div key={g.title} className="border-l-2 border-[color:var(--pv-blue)] pl-6">
-              <h4 className="font-display text-lg text-[color:var(--pv-blue)]">{g.title}</h4>
-              <ul className="mt-5 space-y-3 text-sm">
-                {g.items.map(([n, t]) => (
-                  <li key={n} className="flex items-center justify-between border-b border-dashed border-[color:var(--pv-line)] pb-3">
-                    <span className="text-slate-700">{n}</span>
-                    <span className="font-medium text-[color:var(--pv-blue)]">{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <SectionHeading eyebrow="Social Infrastructure" title={`Location Advantages — ${location}`} />
+        <div className="mt-14 grid gap-px bg-[color:var(--pv-line)] md:grid-cols-2 lg:grid-cols-3">
+          {groups.map((g) => {
+            const Icon = g.icon;
+            return (
+              <div key={g.title} className="bg-white p-7">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-[color:var(--pv-soft)]">
+                    <Icon className="h-5 w-5 text-[color:var(--pv-blue)]" strokeWidth={1.6} />
+                  </span>
+                  <h4 className="font-display text-base font-medium text-[color:var(--pv-blue)]">{g.title}</h4>
+                </div>
+                <ul className="mt-5 space-y-3 text-sm">
+                  {g.items.map(([n, t]) => (
+                    <li key={n} className="flex items-center justify-between gap-4 border-b border-dashed border-[color:var(--pv-line)] pb-3 last:border-0">
+                      <span className="text-slate-700">{n}</span>
+                      <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--pv-blue)]">{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
