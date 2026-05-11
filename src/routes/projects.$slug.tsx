@@ -9,6 +9,7 @@ import {
   Users, Baby, Building2, FlowerIcon, Check,
 } from "lucide-react";
 import { InquiryDialog } from "@/components/inquiry-dialog";
+import { BrochureDialog } from "@/components/brochure-dialog";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetail,
