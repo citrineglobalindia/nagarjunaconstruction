@@ -77,10 +77,25 @@ function ProjectDetail() {
     >
       {/* ============== HERO ============== */}
       <section className="relative h-[100vh] min-h-[640px] w-full overflow-hidden bg-[color:var(--pv-blue)]">
-        {project.hero_image && (
-          <img src={project.hero_image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
+        {project.hero_video ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={project.hero_image ?? undefined}
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src={project.hero_video} type="video/mp4" />
+          </video>
+        ) : (
+          project.hero_image && (
+            <img src={project.hero_image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
+          )
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-20 md:px-16 md:pb-24">
           <h1 className="font-display text-5xl font-light tracking-tight text-white md:text-7xl">{project.name}</h1>
           <p className="mt-4 max-w-2xl text-sm text-white/90 md:text-base">
