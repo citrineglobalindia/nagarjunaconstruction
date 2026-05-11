@@ -135,23 +135,32 @@ export function ProjectCard(p: ProjectCardProps) {
           )}
         </motion.div>
 
-        {/* Twin CTAs */}
-        <motion.div
-          variants={itemVariants}
-          className="mt-auto grid grid-cols-2 gap-[2px] bg-[color:var(--navy)]/15 -mx-px -mb-px"
-        >
-          <InquiryDialog
-            projectId={p.id}
-            projectName={p.name}
-            source="card-site-visit"
-            trigger={<CTAButton>Book a Site Visit</CTAButton>}
-          />
-          <InquiryDialog
-            projectId={p.id}
-            projectName={p.name}
-            source="card-enquire"
-            trigger={<CTAButton>Enquire Now</CTAButton>}
-          />
+        {/* CTAs — flush, square, navy. Sold Out shows single "View Project" */}
+        <motion.div variants={itemVariants} className="mt-auto -mx-px -mb-px">
+          {p.status === "Sold Out" ? (
+            <Link
+              to="/projects/$slug"
+              params={{ slug: p.slug }}
+              className="block w-1/2 bg-[color:var(--navy)] px-4 py-4 text-center text-[13px] font-medium tracking-wide text-cream transition-colors hover:bg-[color:var(--navy)]/90"
+            >
+              View Project
+            </Link>
+          ) : (
+            <div className="grid grid-cols-2">
+              <InquiryDialog
+                projectId={p.id}
+                projectName={p.name}
+                source="card-site-visit"
+                trigger={<CTAButton>Book a Site Visit</CTAButton>}
+              />
+              <InquiryDialog
+                projectId={p.id}
+                projectName={p.name}
+                source="card-enquire"
+                trigger={<CTAButton>Enquire Now</CTAButton>}
+              />
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.article>
