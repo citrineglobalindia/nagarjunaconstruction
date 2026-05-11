@@ -67,23 +67,32 @@ function ProjectsPage() {
         </div>
       </section>
 
-      {/* Filters */}
+      {/* Status filter pills — Puravankara style */}
       <section className="sticky top-20 z-30 border-b border-border bg-background/95 backdrop-blur">
-        <div className="container-luxe flex flex-wrap items-center gap-3 py-5">
-          <FilterSelect label="Type" value={search.type} options={TYPES} onChange={(v) => setFilter("type", v)} />
-          <FilterSelect label="Status" value={search.status} options={STATUSES} onChange={(v) => setFilter("status", v)} />
-          <FilterSelect label="Bedrooms" value={search.bedrooms} options={BEDROOMS} onChange={(v) => setFilter("bedrooms", v)} />
-          {(search.type || search.status || search.bedrooms) && (
-            <button
-              onClick={() => navigate({ search: {} })}
-              className="ml-auto text-[11px] uppercase tracking-[0.22em] text-gold hover:underline"
-            >
-              Clear
-            </button>
-          )}
-          <span className="ml-auto text-xs text-muted-foreground">
-            {filtered.length} {filtered.length === 1 ? "residence" : "residences"}
-          </span>
+        <div className="container-luxe py-6">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <StatusPill active={!search.status} onClick={() => setFilter("status", undefined)}>All</StatusPill>
+            {STATUSES.map((s) => (
+              <StatusPill key={s} active={search.status === s} onClick={() => setFilter("status", s)}>
+                {s}
+              </StatusPill>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.18em]">
+            <FilterSelect label="Type" value={search.type} options={TYPES} onChange={(v) => setFilter("type", v)} />
+            <FilterSelect label="Bedrooms" value={search.bedrooms} options={BEDROOMS} onChange={(v) => setFilter("bedrooms", v)} />
+            {(search.type || search.status || search.bedrooms) && (
+              <button
+                onClick={() => navigate({ search: {} })}
+                className="text-gold hover:underline"
+              >
+                Clear
+              </button>
+            )}
+            <span className="text-muted-foreground">
+              {filtered.length} {filtered.length === 1 ? "residence" : "residences"}
+            </span>
+          </div>
         </div>
       </section>
 
