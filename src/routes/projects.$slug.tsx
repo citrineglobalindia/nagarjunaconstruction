@@ -80,15 +80,15 @@ function ProjectDetail() {
         {project.hero_image && (
           <img src={project.hero_image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/30" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-16 md:px-16 md:pb-20">
-          <h1 className="font-display text-5xl font-light text-white md:text-7xl">{project.name}</h1>
-          <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-20 md:px-16 md:pb-24">
+          <h1 className="font-display text-5xl font-light tracking-tight text-white md:text-7xl">{project.name}</h1>
+          <p className="mt-4 max-w-2xl text-sm text-white/90 md:text-base">
             Near {project.location} | {bhkRange}
             {project.price_from ? ` | ${formatPriceShort(project.price_from as number)} Onwards*` : ""}
           </p>
         </div>
-        <div className="absolute bottom-4 left-6 text-[10px] uppercase tracking-[0.3em] text-white/60 md:left-16">
+        <div className="absolute bottom-5 left-6 text-[10px] uppercase tracking-[0.32em] text-white/60 md:left-16">
           Artistic Impression
         </div>
       </section>
