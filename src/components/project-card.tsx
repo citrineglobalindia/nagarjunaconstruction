@@ -57,7 +57,7 @@ export function ProjectCard(p: ProjectCardProps) {
       viewport={{ once: true, margin: "-80px" }}
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 220, damping: 24 }}
-      className="group flex flex-col border border-[color:var(--navy)]/15 bg-card shadow-[0_2px_18px_-12px_rgba(10,26,47,0.2)] transition-shadow duration-500 hover:shadow-[0_24px_60px_-22px_rgba(10,26,47,0.35)]"
+      className="group flex flex-col border border-[color:var(--navy)] bg-card shadow-[0_2px_18px_-12px_rgba(10,26,47,0.2)] transition-shadow duration-500 hover:shadow-[0_24px_60px_-22px_rgba(10,26,47,0.35)]"
     >
       {/* Image with status ribbon */}
       <Link
