@@ -1,13 +1,15 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import { InquiryDialog } from "./inquiry-dialog";
+import { SlideTabs } from "./ui/slide-tabs";
 
 const links = [
+  { to: "/", label: "Home" },
   { to: "/projects", label: "Projects" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
-];
+] as const;
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
