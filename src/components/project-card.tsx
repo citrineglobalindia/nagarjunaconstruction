@@ -135,18 +135,18 @@ export function ProjectCard(p: ProjectCardProps) {
           )}
         </motion.div>
 
-        {/* CTAs — flush, square, navy. Sold Out shows single "View Project" */}
-        <motion.div variants={itemVariants} className="mt-auto -mx-px -mb-px">
+        {/* CTAs — anchored to bottom corners with gap */}
+        <motion.div variants={itemVariants} className="mt-auto flex items-stretch justify-between gap-3 pb-7">
           {p.status === "Sold Out" ? (
             <Link
               to="/projects/$slug"
               params={{ slug: p.slug }}
-              className="block w-1/2 bg-[color:var(--navy)] px-4 py-4 text-center text-[13px] font-medium tracking-wide text-cream transition-colors hover:bg-[color:var(--navy)]/90"
+              className="bg-[color:var(--navy)] px-7 py-4 text-center text-[13px] font-medium tracking-wide text-cream transition-colors hover:bg-[color:var(--navy)]/90"
             >
               View Project
             </Link>
           ) : (
-            <div className="grid grid-cols-2">
+            <>
               <InquiryDialog
                 projectId={p.id}
                 projectName={p.name}
@@ -159,7 +159,7 @@ export function ProjectCard(p: ProjectCardProps) {
                 source="card-enquire"
                 trigger={<CTAButton>Enquire Now</CTAButton>}
               />
-            </div>
+            </>
           )}
         </motion.div>
       </div>
