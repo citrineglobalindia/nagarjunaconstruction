@@ -44,17 +44,14 @@ export function SiteNav() {
           <span className="hidden text-[10px] uppercase tracking-[0.32em] text-gold sm:inline">Corporation</span>
         </Link>
 
-        <nav className="hidden items-center gap-10 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-[11px] font-medium uppercase tracking-[0.24em] text-cream/85 transition-colors hover:text-gold"
-              activeProps={{ className: "text-gold" }}
-            >
-              {l.label}
-            </Link>
-          ))}
+        <nav className="hidden lg:block">
+          <SlideTabs
+            selectedIndex={selectedIndex}
+            tabs={links.map((l) => ({
+              label: l.label,
+              onClick: () => navigate({ to: l.to }),
+            }))}
+          />
         </nav>
 
         <div className="hidden items-center gap-5 lg:flex">
