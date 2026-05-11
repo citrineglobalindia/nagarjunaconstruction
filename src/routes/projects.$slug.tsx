@@ -268,7 +268,7 @@ function ProjectTour({ project, gallery }: { project: any; gallery: string[] }) 
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Project Tour" title="Take a closer look" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "walk"} onClick={() => setTab("walk")}>Walkthrough</TabBtn>
           <TabBtn active={tab === "lifestyle"} onClick={() => setTab("lifestyle")}>Lifestyle Video</TabBtn>
         </div>
@@ -326,7 +326,7 @@ function Amenities({ amenities, cover }: { amenities: string[]; cover?: string }
     <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Project Amenities" title="Premium amenities" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "indoor"} onClick={() => setTab("indoor")}>Indoor</TabBtn>
           <TabBtn active={tab === "outdoor"} onClick={() => setTab("outdoor")}>Outdoor</TabBtn>
         </div>
@@ -381,7 +381,7 @@ function UnitPlans({ project }: { project: any }) {
     <section className="bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Unit Plans" title="Well-planned apartment layouts" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "master"} onClick={() => setTab("master")}>Master Plan</TabBtn>
           <TabBtn active={tab === "unit"} onClick={() => setTab("unit")}>Unit Plan</TabBtn>
         </div>
@@ -419,7 +419,7 @@ function Gallery({ images }: { images: string[] }) {
     <section className="bg-[color:var(--pv-soft)] py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading eyebrow="Gallery" title="A glimpse of life at its best" />
-        <div className="mt-10 flex justify-center gap-2">
+        <TabGroup>
           <TabBtn active={tab === "interior"} onClick={() => setTab("interior")}>Interior</TabBtn>
           <TabBtn active={tab === "exterior"} onClick={() => setTab("exterior")}>Exterior</TabBtn>
         </div>
