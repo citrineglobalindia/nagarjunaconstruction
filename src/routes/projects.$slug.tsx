@@ -235,9 +235,8 @@ function SectionHeading({
 }) {
   return (
     <div className={centered ? "text-center" : ""}>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[color:var(--pv-blue)]">{eyebrow}</p>
-      <h2 className="mt-4 font-display text-3xl font-light text-slate-800 md:text-4xl">{title}</h2>
-      <span className={`mt-5 inline-block h-px w-12 bg-[color:var(--pv-blue)] ${centered ? "" : ""}`} />
+      <h3 className="font-display text-xl font-medium text-[color:var(--pv-blue)] md:text-2xl">{eyebrow}</h3>
+      <h2 className="mt-2 font-display text-2xl font-light text-slate-700 md:text-[28px]">{title}</h2>
     </div>
   );
 }
