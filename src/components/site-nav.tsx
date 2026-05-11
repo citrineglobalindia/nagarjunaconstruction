@@ -12,9 +12,16 @@ const links = [
 ] as const;
 
 export function SiteNav() {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState("EN");
+
+  const selectedIndex = useMemo(() => {
+    const idx = links.findIndex((l) => (l.to === "/" ? pathname === "/" : pathname.startsWith(l.to)));
+    return idx === -1 ? 0 : idx;
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
