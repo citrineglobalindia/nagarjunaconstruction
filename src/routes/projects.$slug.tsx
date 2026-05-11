@@ -131,9 +131,9 @@ function ProjectDetail() {
             <PaymentPlan />
           </div>
 
-          {/* Sticky sidebar */}
-          <aside className="lg:sticky lg:top-28 lg:h-fit">
-            <div className="border border-[color:var(--navy)]/15 bg-card p-8">
+          {/* Sticky sidebar — desktop */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border border-[color:var(--navy)]/15 bg-card p-8 shadow-[0_20px_60px_-30px_rgba(10,26,47,0.25)]">
               <p className="eyebrow"><span className="gold-rule" />Key Facts</p>
               <dl className="mt-6 space-y-5 text-sm">
                 <Fact icon={MapPin} label="Location" value={project.location} />
@@ -173,8 +173,61 @@ function ProjectDetail() {
               />
             </div>
           </aside>
+
+          {/* Inline Key Facts card — mobile/tablet */}
+          <aside className="lg:hidden -order-1">
+            <div className="border border-[color:var(--navy)]/15 bg-card p-6 sm:p-8">
+              <p className="eyebrow"><span className="gold-rule" />Key Facts</p>
+              <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5 text-sm">
+                <Fact icon={MapPin} label="Location" value={project.location} />
+                <Fact icon={Calendar} label="Handover" value={project.handover_date ?? "TBA"} />
+                <Fact icon={Wallet} label="Starting Price" value={formatPrice(project.price_from as number | null)} />
+                <Fact
+                  icon={Bed}
+                  label="Configurations"
+                  value={project.bedrooms_min && project.bedrooms_max ? `${project.bedrooms_min} – ${project.bedrooms_max} BHK` : "Various"}
+                />
+              </dl>
+            </div>
+          </aside>
         </div>
       </section>
+
+      {/* Mobile sticky CTA bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--navy)]/15 bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
+        <div className="grid grid-cols-3 gap-2">
+          <InquiryDialog
+            projectId={project.id}
+            projectName={project.name}
+            source="mobile-bar-enquire"
+            trigger={
+              <button className="btn-gold w-full !px-2 !py-3 text-[11px]">Enquire</button>
+            }
+          />
+          <InquiryDialog
+            projectId={project.id}
+            projectName={project.name}
+            source="mobile-bar-visit"
+            trigger={
+              <button className="w-full border border-[color:var(--navy)] px-2 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--navy)]">
+                Visit
+              </button>
+            }
+          />
+          <BrochureDialog
+            projectId={project.id}
+            projectName={project.name}
+            brochureUrl={project.brochure_url}
+            trigger={
+              <button className="inline-flex w-full items-center justify-center gap-1 border border-gold/60 px-2 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--navy)]">
+                <Download className="h-3.5 w-3.5" /> Brochure
+              </button>
+            }
+          />
+        </div>
+      </div>
+      {/* Spacer so mobile bar doesn't cover footer content */}
+      <div aria-hidden className="h-20 lg:hidden" />
     </>
   );
 }
