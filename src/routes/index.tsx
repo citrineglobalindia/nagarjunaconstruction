@@ -47,15 +47,16 @@ function HomePage() {
             loop
             muted
             playsInline
+            preload="auto"
             poster="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2400&q=80"
             className="absolute inset-0 h-full w-full object-cover"
           >
             <source
-              src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-luxury-villa-1572/1080p.mp4"
+              src="https://videos.pexels.com/video-files/3015510/3015510-uhd_2560_1440_24fps.mp4"
               type="video/mp4"
             />
             <source
-              src="https://cdn.coverr.co/videos/coverr-aerial-shot-of-dubai-marina-2633/1080p.mp4"
+              src="https://videos.pexels.com/video-files/2169880/2169880-uhd_2560_1440_30fps.mp4"
               type="video/mp4"
             />
           </video>
