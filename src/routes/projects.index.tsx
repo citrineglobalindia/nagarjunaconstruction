@@ -62,3 +62,112 @@ function ProjectsPage() {
   function setFilter(key: keyof typeof search, value: string | undefined) {
     navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: value || undefined }) });
   }
+
+  return (
+    <>
+      <ShaderHero
+        trustBadge={{ text: "The Nagarjuna Collection", icons: [<Sparkles className="h-3.5 w-3.5" key="s" />] }}
+        headline={{ line1: "Iconic Living.", line2: "Crafted for the Few." }}
+        subtitle="From serene retreats to skyline towers, every address is selected with intention — a private portfolio of residences for those who value rarity over scale."
+        buttons={{
+          primary: { text: "Explore Residences", onClick: () => document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" }) },
+          secondary: { text: "Private Consultation", onClick: () => navigate({ to: "/contact" }) },
+        }}
+        className="pt-24"
+      />
+
+
+      {/* Status filter pills */}
+      <section className="sticky top-20 z-30 border-b border-border bg-background/95 backdrop-blur">
+        <div className="container-luxe py-6">
+          <LayoutGroup id="status-pills">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <StatusPill active={!search.status} onClick={() => setFilter("status", undefined)}>All</StatusPill>
+              {STATUSES.map((s) => (
+                <StatusPill key={s} active={search.status === s} onClick={() => setFilter("status", s)}>
+                  {s}
+                </StatusPill>
+              ))}
+            </div>
+          </LayoutGroup>
+          {(search.type || search.status || search.bedrooms) && (
+            <div className="mt-4 flex justify-center">
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => navigate({ search: {} })}
+                className="text-[11px] uppercase tracking-[0.18em] text-gold hover:underline"
+              >
+                Clear
+              </motion.button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section id="collection" className="bg-background py-16 md:py-24 scroll-mt-24">
+        <div className="container-luxe">
+          {isLoading ? (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {[1,2,3,4,5,6].map(i => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.1 }}
+                  className="aspect-[4/5] bg-muted"
+                />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="py-24 text-center text-muted-foreground"
+            >
+              No residences match your selection.
+            </motion.div>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${search.status}-${search.type}-${search.bedrooms}`}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                variants={{
+                  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+                }}
+                className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+              >
+                {filtered.map((p) => <ProjectCard key={p.slug} {...p} />)}
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function StatusPill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: "spring", stiffness: 320, damping: 22 }}
+      className={`relative min-w-[150px] border border-[color:var(--navy)] px-8 py-3 text-[14px] font-medium tracking-wide transition-colors ${
+        active ? "text-cream" : "text-[color:var(--navy)] hover:bg-[color:var(--navy)]/5"
+      }`}
+    >
+      {active && (
+        <motion.span
+          layoutId="active-pill"
+          className="absolute inset-0 bg-[color:var(--navy)]"
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        />
+      )}
+      <span className="relative">{children}</span>
+    </motion.button>
+  );
+}
