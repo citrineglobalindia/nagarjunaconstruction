@@ -28,8 +28,8 @@ export function SiteFooter() {
           ]} />
           <FooterCol title="Discover" items={[
             { to: "/projects", label: "All Projects" },
-            { to: "/projects", label: "Off-Plan" },
-            { to: "/projects", label: "Ready Now" },
+            { to: "/projects", label: "Off-Plan", search: { status: "Upcoming" } },
+            { to: "/projects", label: "Ready Now", search: { status: "Completed" } },
           ]} />
 
           <div>
@@ -44,6 +44,7 @@ export function SiteFooter() {
           <div className="flex gap-6">
             <Link to="/privacy" className="hover:text-gold">Privacy</Link>
             <Link to="/terms" className="hover:text-gold">Terms</Link>
+            <Link to="/disclaimer" className="hover:text-gold">Disclaimer</Link>
             <Link to="/cookies" className="hover:text-gold">Cookies</Link>
           </div>
         </div>
@@ -52,13 +53,17 @@ export function SiteFooter() {
   );
 }
 
-function FooterCol({ title, items }: { title: string; items: { to: string; label: string }[] }) {
+type FooterColItem = { to: string; label: string; search?: Record<string, string> };
+
+function FooterCol({ title, items }: { title: string; items: FooterColItem[] }) {
   return (
     <div>
       <div className="text-[11px] uppercase tracking-[0.28em] text-gold">{title}</div>
       <ul className="mt-4 space-y-3 text-sm text-cream/75">
         {items.map((i, idx) => (
-          <li key={idx}><Link to={i.to} className="hover:text-gold">{i.label}</Link></li>
+          <li key={idx}>
+            <Link to={i.to} search={i.search} className="hover:text-gold">{i.label}</Link>
+          </li>
         ))}
       </ul>
     </div>
