@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 export function useIsRTL() {
-  const [isRTL, setIsRTL] = useState(
-    typeof document !== "undefined" && document.documentElement.dir === "rtl",
-  );
+  // Always start as false to keep SSR and client first render in sync;
+  // the real value is set in useEffect after hydration.
+  const [isRTL, setIsRTL] = useState(false);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
