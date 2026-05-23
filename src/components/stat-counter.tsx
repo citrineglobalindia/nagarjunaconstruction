@@ -10,7 +10,7 @@ export function StatCounter({ value, suffix = "", label }: { value: number; suff
   useEffect(() => {
     if (inView) {
       const controls = animate(count, value, { duration: 2.4, ease: "easeOut" });
-      return controls.stop;
+      return () => controls.stop();
     }
   }, [inView, value, count]);
 
