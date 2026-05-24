@@ -1,9 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { InquiryDialog } from "./inquiry-dialog";
 
 type MenuChild = { label: string; to: string };
 type MenuItem = { label: string; to?: string; children?: MenuChild[] };
