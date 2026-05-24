@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown, ArrowUpRight, Phone, Mail, MapPin, Instagram, Facebook, Linkedin, Youtube } from "lucide-react";
 import { InquiryDialog } from "./inquiry-dialog";
+import menuFeature from "@/assets/menu-feature.jpg";
+
 
 
 type NavChild = { to: string; label: string; description?: string };
