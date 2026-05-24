@@ -1,9 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { InquiryDialog } from "./inquiry-dialog";
 
 type MenuChild = { label: string; to: string };
 type MenuItem = { label: string; to?: string; children?: MenuChild[] };
@@ -233,30 +232,6 @@ export function SiteNav() {
                 </ul>
               </nav>
 
-              <div className="border-t border-white/8 px-6 py-5 text-[12px] text-white/65">
-                <div className="space-y-2.5">
-                  <a href="tel:+914040000000" className="flex items-center gap-2.5 hover:text-white">
-                    <Phone className="h-3.5 w-3.5 text-primary" />
-                    +91 40 4000 0000
-                  </a>
-                  <a href="mailto:info@nagarjuna.example" className="flex items-center gap-2.5 hover:text-white">
-                    <Mail className="h-3.5 w-3.5 text-primary" />
-                    info@nagarjuna.example
-                  </a>
-                  <div className="flex items-start gap-2.5">
-                    <MapPin className="mt-0.5 h-3.5 w-3.5 text-primary" />
-                    Banjara Hills, Hyderabad
-                  </div>
-                </div>
-                <InquiryDialog
-                  source="menu"
-                  trigger={
-                    <button type="button" className="btn-gold mt-5 w-full text-xs">
-                      Enquire Now
-                    </button>
-                  }
-                />
-              </div>
             </motion.aside>
           </motion.div>
         )}
