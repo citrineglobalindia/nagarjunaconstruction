@@ -46,7 +46,7 @@ const sideMenu: SideItem[] = [
     { label: "Office Spaces", to: "/projects" },
     { label: "Retail", to: "/projects" },
   ]},
-  { label: "Land Enquiry", to: "/contact" },
+  
   { label: "Media", to: "/blogs", children: [
     { label: "News", to: "/blogs" },
     { label: "Press Releases", to: "/blogs" },
