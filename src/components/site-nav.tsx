@@ -166,28 +166,18 @@ export function SiteNav() {
       }`}
     >
       <div className="container-luxe grid h-20 grid-cols-[1fr_auto_1fr] items-center gap-4">
-        {/* Left cluster: Menu icon + left links */}
-        <div className="hidden items-center gap-6 lg:flex">
+        {/* Left: Menu button */}
+        <div className="flex items-center">
           <button
             onClick={() => setOpen(!open)}
             className="flex items-center gap-2 text-cream transition-colors hover:text-gold"
             aria-label="Open menu"
           >
-            <Menu className="h-5 w-5" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em]">Menu</span>
-            <span className="ml-1 h-px w-8 bg-gold/60" />
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="hidden text-[11px] font-medium uppercase tracking-[0.28em] sm:inline">Menu</span>
+            <span className="ml-1 hidden h-px w-8 bg-gold/60 sm:inline-block" />
           </button>
-          <nav onMouseLeave={() => setHovered(null)}>
-            <ul className="flex items-center gap-1">
-              {leftLinks.map(renderLink)}
-            </ul>
-          </nav>
         </div>
-
-        {/* Mobile: menu button left */}
-        <button onClick={() => setOpen(!open)} className="text-cream lg:hidden" aria-label="Toggle menu">
-          {open ? <X /> : <Menu />}
-        </button>
 
         {/* Centered Brand */}
         <Link to="/" className="flex items-center justify-center">
@@ -196,35 +186,8 @@ export function SiteNav() {
           </span>
         </Link>
 
-        {/* Right cluster: right links + icons */}
-        <div className="hidden items-center justify-end gap-6 lg:flex">
-          <nav onMouseLeave={() => setHovered(null)}>
-            <ul className="flex items-center gap-1">
-              {rightLinks.map(renderLink)}
-            </ul>
-          </nav>
-          <div className="flex items-center gap-3 border-l border-cream/15 pl-5">
-            <button
-              aria-label="Search"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors hover:border-gold hover:text-gold"
-            >
-              <Search className="h-4 w-4" />
-            </button>
-            <InquiryDialog
-              trigger={
-                <button
-                  aria-label="Contact"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors hover:border-gold hover:text-gold"
-                >
-                  <Phone className="h-4 w-4" />
-                </button>
-              }
-            />
-          </div>
-        </div>
-
-        {/* Mobile spacer (right side) */}
-        <span className="lg:hidden" />
+        {/* Right spacer */}
+        <span />
       </div>
 
       {/* Side drawer (left) */}
