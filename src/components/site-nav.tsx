@@ -28,6 +28,46 @@ const rightLinks: NavLink[] = [
 
 const allLinks = [...leftLinks, ...rightLinks];
 
+type SideItem = { label: string; to?: string; children?: { label: string; to: string }[] };
+
+const sideMenu: SideItem[] = [
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/about", children: [
+    { label: "About Company", to: "/about/company" },
+    { label: "Team", to: "/about/team" },
+    { label: "Vision & Mission", to: "/about/vision-mission" },
+  ]},
+  { label: "Residential", to: "/projects", children: [
+    { label: "All Projects", to: "/projects" },
+    { label: "Ongoing", to: "/projects" },
+    { label: "Completed", to: "/projects" },
+  ]},
+  { label: "Commercial", to: "/projects", children: [
+    { label: "Office Spaces", to: "/projects" },
+    { label: "Retail", to: "/projects" },
+  ]},
+  { label: "Land Enquiry", to: "/contact" },
+  { label: "Media", to: "/blogs", children: [
+    { label: "News", to: "/blogs" },
+    { label: "Press Releases", to: "/blogs" },
+  ]},
+  { label: "Blog", to: "/blogs" },
+  { label: "Channel Partners", to: "/contact" },
+  { label: "Sustainability", to: "/about/vision-mission" },
+  { label: "Board Of Directors", to: "/about/team" },
+  { label: "Leadership", to: "/about/team" },
+  { label: "Purva Experiences", to: "/about", children: [
+    { label: "Lifestyle", to: "/about" },
+    { label: "Community", to: "/about" },
+  ]},
+  { label: "Investors", to: "/about/company" },
+  { label: "Payments & Refunds", to: "/contact" },
+  { label: "NRI Corner", to: "/contact" },
+  { label: "CSR", to: "/about/vision-mission" },
+  { label: "Career", to: "/contact" },
+  { label: "Contact Us", to: "/contact" },
+];
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function SiteNav() {
