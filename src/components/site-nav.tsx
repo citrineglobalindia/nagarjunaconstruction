@@ -28,6 +28,46 @@ const rightLinks: NavLink[] = [
 
 const allLinks = [...leftLinks, ...rightLinks];
 
+type SideItem = { label: string; to?: string; children?: { label: string; to: string }[] };
+
+const sideMenu: SideItem[] = [
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/about", children: [
+    { label: "About Company", to: "/about/company" },
+    { label: "Team", to: "/about/team" },
+    { label: "Vision & Mission", to: "/about/vision-mission" },
+  ]},
+  { label: "Residential", to: "/projects", children: [
+    { label: "All Projects", to: "/projects" },
+    { label: "Ongoing", to: "/projects" },
+    { label: "Completed", to: "/projects" },
+  ]},
+  { label: "Commercial", to: "/projects", children: [
+    { label: "Office Spaces", to: "/projects" },
+    { label: "Retail", to: "/projects" },
+  ]},
+  { label: "Land Enquiry", to: "/contact" },
+  { label: "Media", to: "/blogs", children: [
+    { label: "News", to: "/blogs" },
+    { label: "Press Releases", to: "/blogs" },
+  ]},
+  { label: "Blog", to: "/blogs" },
+  { label: "Channel Partners", to: "/contact" },
+  { label: "Sustainability", to: "/about/vision-mission" },
+  { label: "Board Of Directors", to: "/about/team" },
+  { label: "Leadership", to: "/about/team" },
+  { label: "Purva Experiences", to: "/about", children: [
+    { label: "Lifestyle", to: "/about" },
+    { label: "Community", to: "/about" },
+  ]},
+  { label: "Investors", to: "/about/company" },
+  { label: "Payments & Refunds", to: "/contact" },
+  { label: "NRI Corner", to: "/contact" },
+  { label: "CSR", to: "/about/vision-mission" },
+  { label: "Career", to: "/contact" },
+  { label: "Contact Us", to: "/contact" },
+];
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function SiteNav() {
@@ -36,6 +76,7 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [sideExpanded, setSideExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -197,74 +238,95 @@ export function SiteNav() {
         <span className="lg:hidden" />
       </div>
 
-      {/* Mobile menu */}
+      {/* Side drawer (left) */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="overflow-hidden border-t border-cream/10 bg-[color:var(--navy)] lg:hidden"
-          >
-            <div className="container-luxe flex flex-col gap-1 py-6">
-              {allLinks.map((l) => {
-                const expanded = mobileExpanded === l.label;
-                return (
-                  <div key={l.to} className="border-b border-cream/10 last:border-0">
-                    <div className="flex items-center justify-between">
-                      <Link
-                        to={l.to}
-                        onClick={() => !l.children && setOpen(false)}
-                        className="flex-1 py-4 text-sm uppercase tracking-[0.24em] text-cream"
-                      >
-                        {l.label}
-                      </Link>
-                      {l.children && (
-                        <button
-                          onClick={() => setMobileExpanded(expanded ? null : l.label)}
-                          className="p-3 text-cream"
-                          aria-label={`Toggle ${l.label} submenu`}
-                        >
-                          <ChevronDown
-                            className={`h-4 w-4 transition-transform duration-300 ${
-                              expanded ? "rotate-180" : ""
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="fixed left-0 top-0 z-50 flex h-screen w-[320px] flex-col bg-[#1a1a1a] text-cream shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-cream/10 px-6 py-5">
+                <span className="font-display text-lg tracking-[0.2em] text-cream">MENU</span>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close menu"
+                  className="text-cream transition-colors hover:text-gold"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <nav className="flex-1 overflow-y-auto py-2">
+                <ul>
+                  {sideMenu.map((item) => {
+                    const expanded = sideExpanded === item.label;
+                    const active = item.to && (item.to === "/" ? pathname === "/" : pathname.startsWith(item.to));
+                    return (
+                      <li key={item.label} className="border-b border-cream/5">
+                        <div className="flex items-center justify-between pr-3">
+                          <Link
+                            to={item.to ?? "/"}
+                            onClick={() => !item.children && setOpen(false)}
+                            className={`flex-1 px-6 py-3.5 text-[14px] font-medium tracking-wide transition-colors ${
+                              active ? "text-gold" : "text-cream hover:text-gold"
                             }`}
-                          />
-                        </button>
-                      )}
-                    </div>
-                    <AnimatePresence>
-                      {l.children && expanded && (
-                        <motion.ul
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: EASE }}
-                          className="overflow-hidden"
-                        >
-                          {l.children.map((c) => (
-                            <li key={c.to}>
-                              <Link
-                                to={c.to}
-                                onClick={() => setOpen(false)}
-                                className="block py-3 pl-6 text-[12px] uppercase tracking-[0.22em] text-cream/75 hover:text-gold"
-                              >
-                                {c.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </motion.ul>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-              
-            </div>
-          </motion.div>
+                          >
+                            {item.label}
+                          </Link>
+                          {item.children && (
+                            <button
+                              onClick={() => setSideExpanded(expanded ? null : item.label)}
+                              aria-label={`Toggle ${item.label}`}
+                              className="p-2 text-cream/70 hover:text-gold"
+                            >
+                              <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                            </button>
+                          )}
+                        </div>
+                        <AnimatePresence>
+                          {item.children && expanded && (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: EASE }}
+                              className="overflow-hidden bg-black/30"
+                            >
+                              {item.children.map((c) => (
+                                <li key={c.label}>
+                                  <Link
+                                    to={c.to}
+                                    onClick={() => setOpen(false)}
+                                    className="block px-10 py-2.5 text-[13px] text-cream/70 hover:text-gold"
+                                  >
+                                    {c.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
+
     </header>
   );
 }
