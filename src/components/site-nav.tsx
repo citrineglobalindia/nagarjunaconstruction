@@ -193,158 +193,222 @@ export function SiteNav() {
         <span />
       </div>
 
-      {/* Side drawer (left) — luxe edition */}
+      {/* Full-screen luxe menu */}
       <AnimatePresence>
         {open && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[60] flex"
+          >
+            {/* Backdrop */}
+            <div
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md"
+              className="absolute inset-0 bg-black/80 backdrop-blur-xl"
             />
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 0.55, ease: EASE }}
-              className="fixed left-0 top-0 z-50 flex h-screen w-full max-w-[440px] flex-col overflow-hidden bg-[#0e0e0e] text-cream shadow-[20px_0_60px_-10px_rgba(0,0,0,0.6)]"
-            >
-              {/* Ambient gold glow */}
-              <div className="pointer-events-none absolute -left-32 top-1/3 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--gold)_18%,transparent),transparent_70%)] blur-3xl" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
 
-              {/* Header */}
-              <div className="relative flex items-center justify-between border-b border-cream/10 px-8 py-6">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-gold/80">Navigate</span>
-                  <span className="mt-1 font-display text-xl tracking-[0.2em] text-cream">MENU</span>
+            {/* Panel */}
+            <motion.div
+              initial={{ clipPath: "inset(0 100% 0 0)" }}
+              animate={{ clipPath: "inset(0 0% 0 0)" }}
+              exit={{ clipPath: "inset(0 100% 0 0)" }}
+              transition={{ duration: 0.7, ease: EASE }}
+              className="relative z-10 flex h-full w-full bg-[#0a0a0a] text-cream"
+            >
+              {/* Decorative gold orbs */}
+              <div className="pointer-events-none absolute -left-40 top-1/4 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--gold)_22%,transparent),transparent_70%)] blur-3xl" />
+              <div className="pointer-events-none absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--gold)_10%,transparent),transparent_70%)] blur-3xl" />
+
+              {/* LEFT — Navigation */}
+              <div className="relative flex h-full w-full flex-col lg:w-3/5">
+                {/* Top bar */}
+                <div className="flex items-center justify-between px-6 py-6 md:px-12 md:py-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex flex-col"
+                  >
+                    <span className="text-[10px] uppercase tracking-[0.5em] text-gold">— Explore</span>
+                    <span className="mt-1 font-display text-sm tracking-[0.3em] text-cream/60">NAGARJUNA CONSTRUCTION</span>
+                  </motion.div>
+                  <motion.button
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    onClick={() => setOpen(false)}
+                    aria-label="Close menu"
+                    className="group relative flex h-12 w-12 items-center justify-center border border-cream/20 text-cream transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
+                  >
+                    <X className="h-5 w-5 transition-transform duration-500 group-hover:rotate-180" />
+                  </motion.button>
                 </div>
-                <button
-                  onClick={() => setOpen(false)}
-                  aria-label="Close menu"
-                  className="group relative flex h-10 w-10 items-center justify-center border border-cream/15 text-cream transition-all hover:border-gold hover:text-gold"
-                >
-                  <X className="h-4 w-4 transition-transform group-hover:rotate-90" />
-                </button>
+
+                {/* Nav list */}
+                <nav className="relative flex-1 overflow-y-auto px-6 pb-8 md:px-12">
+                  <ul className="mx-auto max-w-2xl">
+                    {sideMenu.map((item, idx) => {
+                      const expanded = sideExpanded === item.label;
+                      const active = item.to && (item.to === "/" ? pathname === "/" : pathname.startsWith(item.to));
+                      const num = String(idx + 1).padStart(2, "0");
+                      return (
+                        <motion.li
+                          key={item.label}
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.35 + idx * 0.05, ease: EASE }}
+                          className="group/item border-b border-cream/10"
+                        >
+                          <div className="relative flex items-center">
+                            <Link
+                              to={item.to ?? "/"}
+                              onClick={() => !item.children && setOpen(false)}
+                              className={`relative flex flex-1 items-baseline gap-5 py-4 md:py-5 transition-colors ${
+                                active ? "text-gold" : "text-cream hover:text-gold"
+                              }`}
+                            >
+                              <span className="font-display text-[11px] tracking-[0.3em] text-gold/70">
+                                {num}
+                              </span>
+                              <span className="font-display text-[28px] font-light leading-none tracking-tight md:text-[40px]">
+                                {item.label}
+                              </span>
+                              <ArrowUpRight className="ml-auto h-5 w-5 -translate-x-3 self-center opacity-0 transition-all duration-500 group-hover/item:translate-x-0 group-hover/item:opacity-100 md:h-6 md:w-6" />
+                            </Link>
+                            {item.children && (
+                              <button
+                                onClick={() => setSideExpanded(expanded ? null : item.label)}
+                                aria-label={`Toggle ${item.label}`}
+                                className="ml-2 flex h-10 w-10 items-center justify-center text-cream/50 transition-colors hover:text-gold"
+                              >
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? "rotate-180 text-gold" : ""}`} />
+                              </button>
+                            )}
+                          </div>
+                          {/* Animated gold underline on hover */}
+                          <div className="h-px w-0 bg-gold transition-all duration-500 group-hover/item:w-full" />
+
+                          <AnimatePresence>
+                            {item.children && expanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.35, ease: EASE }}
+                                className="overflow-hidden"
+                              >
+                                <div className="ml-10 my-3 grid grid-cols-1 gap-1 border-l border-gold/30 pl-6 sm:grid-cols-2">
+                                  {item.children.map((c, ci) => (
+                                    <motion.div
+                                      key={c.label}
+                                      initial={{ opacity: 0, x: -10 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      transition={{ duration: 0.3, delay: ci * 0.05 }}
+                                    >
+                                      <Link
+                                        to={c.to}
+                                        onClick={() => setOpen(false)}
+                                        className="group/sub flex items-center gap-3 py-2 text-[12px] uppercase tracking-[0.2em] text-cream/60 transition-colors hover:text-gold"
+                                      >
+                                        <span className="h-px w-4 bg-cream/30 transition-all duration-300 group-hover/sub:w-8 group-hover/sub:bg-gold" />
+                                        {c.label}
+                                      </Link>
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.li>
+                      );
+                    })}
+                  </ul>
+
+                  {/* Bottom contact strip */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
+                    className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-6 border-t border-cream/10 pt-8 sm:grid-cols-3"
+                  >
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-gold/70">Call</div>
+                      <a href="tel:+919999999999" className="mt-1.5 flex items-center gap-2 font-display text-sm tracking-wide text-cream hover:text-gold">
+                        <Phone className="h-3.5 w-3.5" /> +91 99999 99999
+                      </a>
+                    </div>
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-gold/70">Write</div>
+                      <a href="mailto:hello@nagarjuna.com" className="mt-1.5 flex items-center gap-2 font-display text-sm tracking-wide text-cream hover:text-gold">
+                        <Mail className="h-3.5 w-3.5" /> hello@nagarjuna.com
+                      </a>
+                    </div>
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-gold/70">Visit</div>
+                      <div className="mt-1.5 flex items-center gap-2 font-display text-sm tracking-wide text-cream">
+                        <MapPin className="h-3.5 w-3.5" /> Hyderabad, India
+                      </div>
+                    </div>
+                  </motion.div>
+                </nav>
               </div>
 
-              {/* Nav list */}
-              <nav className="relative flex-1 overflow-y-auto">
-                <ul className="px-4 py-4">
-                  {sideMenu.map((item, idx) => {
-                    const expanded = sideExpanded === item.label;
-                    const active = item.to && (item.to === "/" ? pathname === "/" : pathname.startsWith(item.to));
-                    const num = String(idx + 1).padStart(2, "0");
-                    return (
-                      <motion.li
-                        key={item.label}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.45, delay: 0.15 + idx * 0.04, ease: EASE }}
-                        className="group/item border-b border-cream/[0.06]"
-                      >
-                        <div className="relative flex items-center">
-                          <Link
-                            to={item.to ?? "/"}
-                            onClick={() => !item.children && setOpen(false)}
-                            className={`relative flex flex-1 items-center gap-4 px-4 py-4 transition-colors ${
-                              active ? "text-gold" : "text-cream hover:text-gold"
-                            }`}
-                          >
-                            <span className="font-display text-[10px] tracking-[0.3em] text-gold/60 transition-colors group-hover/item:text-gold">
-                              {num}
-                            </span>
-                            <span className="font-display text-[20px] font-light tracking-wide">
-                              {item.label}
-                            </span>
-                            <ArrowUpRight className="ml-auto h-4 w-4 -translate-x-2 opacity-0 transition-all duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100" />
-                          </Link>
-                          {item.children && (
-                            <button
-                              onClick={() => setSideExpanded(expanded ? null : item.label)}
-                              aria-label={`Toggle ${item.label}`}
-                              className="mr-2 flex h-8 w-8 items-center justify-center text-cream/60 transition-colors hover:text-gold"
-                            >
-                              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? "rotate-180 text-gold" : ""}`} />
-                            </button>
-                          )}
-                        </div>
-                        <AnimatePresence>
-                          {item.children && expanded && (
-                            <motion.ul
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: EASE }}
-                              className="overflow-hidden"
-                            >
-                              <div className="ml-12 mb-3 border-l border-gold/25 pl-5">
-                                {item.children.map((c, ci) => (
-                                  <motion.li
-                                    key={c.label}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.3, delay: ci * 0.05, ease: EASE }}
-                                  >
-                                    <Link
-                                      to={c.to}
-                                      onClick={() => setOpen(false)}
-                                      className="group/sub flex items-center gap-3 py-2 text-[12px] uppercase tracking-[0.18em] text-cream/60 transition-colors hover:text-gold"
-                                    >
-                                      <span className="h-px w-4 bg-cream/20 transition-all group-hover/sub:w-8 group-hover/sub:bg-gold" />
-                                      {c.label}
-                                    </Link>
-                                  </motion.li>
-                                ))}
-                              </div>
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
-                      </motion.li>
-                    );
-                  })}
-                </ul>
-              </nav>
-
-              {/* Footer — contact + socials */}
+              {/* RIGHT — Feature image pane (desktop) */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4, ease: EASE }}
-                className="relative border-t border-cream/10 bg-black/40 px-8 py-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="relative hidden h-full w-2/5 overflow-hidden border-l border-cream/10 lg:block"
               >
-                <div className="mb-4 flex flex-col gap-2.5 text-[12px] text-cream/70">
-                  <a href="tel:+919999999999" className="flex items-center gap-3 transition-colors hover:text-gold">
-                    <Phone className="h-3.5 w-3.5 text-gold" />
-                    <span className="tracking-wide">+91 99999 99999</span>
-                  </a>
-                  <a href="mailto:hello@nagarjuna.com" className="flex items-center gap-3 transition-colors hover:text-gold">
-                    <Mail className="h-3.5 w-3.5 text-gold" />
-                    <span className="tracking-wide">hello@nagarjuna.com</span>
-                  </a>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
-                    <span className="tracking-wide">Hyderabad, India</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between border-t border-cream/10 pt-4">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-cream/40">Follow</span>
-                  <div className="flex items-center gap-3">
+                <motion.img
+                  src={menuFeature}
+                  alt="Featured project"
+                  initial={{ scale: 1.15 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 2.5, ease: EASE }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
+                <div className="absolute inset-x-0 bottom-0 p-10">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                  >
+                    <span className="text-[10px] uppercase tracking-[0.4em] text-gold">Featured Address</span>
+                    <h3 className="mt-3 font-display text-3xl font-light leading-tight text-cream">
+                      Where architecture<br />meets aspiration.
+                    </h3>
+                    <Link
+                      to="/projects"
+                      onClick={() => setOpen(false)}
+                      className="mt-6 inline-flex items-center gap-3 border-b border-gold pb-1 text-[11px] uppercase tracking-[0.3em] text-gold transition-all hover:gap-5"
+                    >
+                      Explore Projects <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                    className="mt-8 flex items-center gap-3"
+                  >
                     {[Instagram, Facebook, Linkedin, Youtube].map((Icon, i) => (
-                      <a key={i} href="#" className="flex h-8 w-8 items-center justify-center border border-cream/15 text-cream/70 transition-all hover:border-gold hover:text-gold">
+                      <a key={i} href="#" className="flex h-9 w-9 items-center justify-center border border-cream/25 text-cream/80 transition-all hover:border-gold hover:bg-gold hover:text-navy">
                         <Icon className="h-3.5 w-3.5" />
                       </a>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
-            </motion.aside>
-          </>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
+
 
     </header>
   );
