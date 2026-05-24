@@ -191,7 +191,7 @@ export function SiteNav() {
         <span />
       </div>
 
-      {/* Side drawer (left) */}
+      {/* Side drawer (left) — luxe edition */}
       <AnimatePresence>
         {open && (
           <>
@@ -199,51 +199,74 @@ export function SiteNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md"
             />
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ duration: 0.4, ease: EASE }}
-              className="fixed left-0 top-0 z-50 flex h-screen w-[320px] flex-col bg-[#1a1a1a] text-cream shadow-2xl"
+              transition={{ duration: 0.55, ease: EASE }}
+              className="fixed left-0 top-0 z-50 flex h-screen w-full max-w-[440px] flex-col overflow-hidden bg-[#0e0e0e] text-cream shadow-[20px_0_60px_-10px_rgba(0,0,0,0.6)]"
             >
-              <div className="flex items-center justify-between border-b border-cream/10 px-6 py-5">
-                <span className="font-display text-lg tracking-[0.2em] text-cream">MENU</span>
+              {/* Ambient gold glow */}
+              <div className="pointer-events-none absolute -left-32 top-1/3 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--gold)_18%,transparent),transparent_70%)] blur-3xl" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
+
+              {/* Header */}
+              <div className="relative flex items-center justify-between border-b border-cream/10 px-8 py-6">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-gold/80">Navigate</span>
+                  <span className="mt-1 font-display text-xl tracking-[0.2em] text-cream">MENU</span>
+                </div>
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"
-                  className="text-cream transition-colors hover:text-gold"
+                  className="group relative flex h-10 w-10 items-center justify-center border border-cream/15 text-cream transition-all hover:border-gold hover:text-gold"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 transition-transform group-hover:rotate-90" />
                 </button>
               </div>
-              <nav className="flex-1 overflow-y-auto py-2">
-                <ul>
-                  {sideMenu.map((item) => {
+
+              {/* Nav list */}
+              <nav className="relative flex-1 overflow-y-auto">
+                <ul className="px-4 py-4">
+                  {sideMenu.map((item, idx) => {
                     const expanded = sideExpanded === item.label;
                     const active = item.to && (item.to === "/" ? pathname === "/" : pathname.startsWith(item.to));
+                    const num = String(idx + 1).padStart(2, "0");
                     return (
-                      <li key={item.label} className="border-b border-cream/5">
-                        <div className="flex items-center justify-between pr-3">
+                      <motion.li
+                        key={item.label}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.45, delay: 0.15 + idx * 0.04, ease: EASE }}
+                        className="group/item border-b border-cream/[0.06]"
+                      >
+                        <div className="relative flex items-center">
                           <Link
                             to={item.to ?? "/"}
                             onClick={() => !item.children && setOpen(false)}
-                            className={`flex-1 px-6 py-3.5 text-[14px] font-medium tracking-wide transition-colors ${
+                            className={`relative flex flex-1 items-center gap-4 px-4 py-4 transition-colors ${
                               active ? "text-gold" : "text-cream hover:text-gold"
                             }`}
                           >
-                            {item.label}
+                            <span className="font-display text-[10px] tracking-[0.3em] text-gold/60 transition-colors group-hover/item:text-gold">
+                              {num}
+                            </span>
+                            <span className="font-display text-[20px] font-light tracking-wide">
+                              {item.label}
+                            </span>
+                            <ArrowUpRight className="ml-auto h-4 w-4 -translate-x-2 opacity-0 transition-all duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100" />
                           </Link>
                           {item.children && (
                             <button
                               onClick={() => setSideExpanded(expanded ? null : item.label)}
                               aria-label={`Toggle ${item.label}`}
-                              className="p-2 text-cream/70 hover:text-gold"
+                              className="mr-2 flex h-8 w-8 items-center justify-center text-cream/60 transition-colors hover:text-gold"
                             >
-                              <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? "rotate-180 text-gold" : ""}`} />
                             </button>
                           )}
                         </div>
@@ -253,28 +276,69 @@ export function SiteNav() {
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25, ease: EASE }}
-                              className="overflow-hidden bg-black/30"
+                              transition={{ duration: 0.3, ease: EASE }}
+                              className="overflow-hidden"
                             >
-                              {item.children.map((c) => (
-                                <li key={c.label}>
-                                  <Link
-                                    to={c.to}
-                                    onClick={() => setOpen(false)}
-                                    className="block px-10 py-2.5 text-[13px] text-cream/70 hover:text-gold"
+                              <div className="ml-12 mb-3 border-l border-gold/25 pl-5">
+                                {item.children.map((c, ci) => (
+                                  <motion.li
+                                    key={c.label}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.3, delay: ci * 0.05, ease: EASE }}
                                   >
-                                    {c.label}
-                                  </Link>
-                                </li>
-                              ))}
+                                    <Link
+                                      to={c.to}
+                                      onClick={() => setOpen(false)}
+                                      className="group/sub flex items-center gap-3 py-2 text-[12px] uppercase tracking-[0.18em] text-cream/60 transition-colors hover:text-gold"
+                                    >
+                                      <span className="h-px w-4 bg-cream/20 transition-all group-hover/sub:w-8 group-hover/sub:bg-gold" />
+                                      {c.label}
+                                    </Link>
+                                  </motion.li>
+                                ))}
+                              </div>
                             </motion.ul>
                           )}
                         </AnimatePresence>
-                      </li>
+                      </motion.li>
                     );
                   })}
                 </ul>
               </nav>
+
+              {/* Footer — contact + socials */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4, ease: EASE }}
+                className="relative border-t border-cream/10 bg-black/40 px-8 py-6"
+              >
+                <div className="mb-4 flex flex-col gap-2.5 text-[12px] text-cream/70">
+                  <a href="tel:+919999999999" className="flex items-center gap-3 transition-colors hover:text-gold">
+                    <Phone className="h-3.5 w-3.5 text-gold" />
+                    <span className="tracking-wide">+91 99999 99999</span>
+                  </a>
+                  <a href="mailto:hello@nagarjuna.com" className="flex items-center gap-3 transition-colors hover:text-gold">
+                    <Mail className="h-3.5 w-3.5 text-gold" />
+                    <span className="tracking-wide">hello@nagarjuna.com</span>
+                  </a>
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
+                    <span className="tracking-wide">Hyderabad, India</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-t border-cream/10 pt-4">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-cream/40">Follow</span>
+                  <div className="flex items-center gap-3">
+                    {[Instagram, Facebook, Linkedin, Youtube].map((Icon, i) => (
+                      <a key={i} href="#" className="flex h-8 w-8 items-center justify-center border border-cream/15 text-cream/70 transition-all hover:border-gold hover:text-gold">
+                        <Icon className="h-3.5 w-3.5" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </motion.aside>
           </>
         )}
@@ -283,3 +347,4 @@ export function SiteNav() {
     </header>
   );
 }
+
