@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ChevronDown, Search, Phone } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowUpRight, Phone, Mail, MapPin, Instagram, Facebook, Linkedin, Youtube } from "lucide-react";
 import { InquiryDialog } from "./inquiry-dialog";
+
 
 type NavChild = { to: string; label: string; description?: string };
 type NavLink = { to: string; label: string; children?: NavChild[] };
