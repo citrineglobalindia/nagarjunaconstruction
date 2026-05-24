@@ -53,8 +53,6 @@ const sideMenu: SideItem[] = [
   ]},
   { label: "Blog", to: "/blogs" },
   { label: "Channel Partners", to: "/contact" },
-  { label: "Board Of Directors", to: "/about/team" },
-  { label: "CSR", to: "/about/vision-mission" },
   { label: "Career", to: "/contact" },
   { label: "Contact Us", to: "/contact" },
 ];
