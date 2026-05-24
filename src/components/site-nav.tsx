@@ -134,7 +134,7 @@ export function SiteNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[70]"
+            className="fixed inset-0 z-[70] overflow-hidden"
           >
             <button
               type="button"
@@ -148,7 +148,7 @@ export function SiteNav() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -32, opacity: 0 }}
               transition={{ duration: 0.35, ease }}
-              className="absolute inset-y-0 left-0 flex w-full max-w-[min(92vw,580px)] flex-col border-r border-border bg-background text-foreground"
+              className="absolute inset-y-0 left-0 flex w-[92vw] max-w-[580px] flex-col border-r border-border bg-background text-foreground shadow-2xl"
             >
               <div className="border-b border-border/80 px-6 py-5 sm:px-8">
                 <div className="flex items-start justify-between gap-6">
