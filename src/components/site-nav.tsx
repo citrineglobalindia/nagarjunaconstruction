@@ -31,34 +31,51 @@ const rightLinks: NavLink[] = [
 
 const allLinks = [...leftLinks, ...rightLinks];
 
-type SideItem = { label: string; to?: string; children?: { label: string; to: string }[] };
+type SideChild = { label: string; to: string };
+type SideItem = { label: string; to?: string; children?: SideChild[] };
+type SideSection = { title: string; items: SideItem[] };
 
-const sideMenu: SideItem[] = [
-  { label: "Home", to: "/" },
-  { label: "About Us", to: "/about", children: [
-    { label: "About Company", to: "/about/company" },
-    { label: "Team", to: "/about/team" },
-    { label: "Vision & Mission", to: "/about/vision-mission" },
-  ]},
-  { label: "Residential", to: "/projects", children: [
-    { label: "All Projects", to: "/projects" },
-    { label: "Ongoing", to: "/projects" },
-    { label: "Completed", to: "/projects" },
-  ]},
-  { label: "Commercial", to: "/projects", children: [
-    { label: "Office Spaces", to: "/projects" },
-    { label: "Retail", to: "/projects" },
-  ]},
-  
-  { label: "Media", to: "/blogs", children: [
-    { label: "News", to: "/blogs" },
-    { label: "Press Releases", to: "/blogs" },
-  ]},
-  { label: "Blog", to: "/blogs" },
-  { label: "Channel Partners", to: "/contact" },
-  { label: "Career", to: "/contact" },
-  { label: "Contact Us", to: "/contact" },
+const sideSections: SideSection[] = [
+  {
+    title: "Discover",
+    items: [
+      { label: "Home", to: "/" },
+      { label: "About Us", to: "/about", children: [
+        { label: "About Company", to: "/about/company" },
+        { label: "Team", to: "/about/team" },
+        { label: "Vision & Mission", to: "/about/vision-mission" },
+      ]},
+    ],
+  },
+  {
+    title: "Properties",
+    items: [
+      { label: "Residential", to: "/projects", children: [
+        { label: "All Projects", to: "/projects" },
+        { label: "Ongoing", to: "/projects" },
+        { label: "Completed", to: "/projects" },
+      ]},
+      { label: "Commercial", to: "/projects", children: [
+        { label: "Office Spaces", to: "/projects" },
+        { label: "Retail", to: "/projects" },
+      ]},
+    ],
+  },
+  {
+    title: "Engage",
+    items: [
+      { label: "Media", to: "/blogs", children: [
+        { label: "News", to: "/blogs" },
+        { label: "Press Releases", to: "/blogs" },
+      ]},
+      { label: "Blog", to: "/blogs" },
+      { label: "Channel Partners", to: "/contact" },
+      { label: "Career", to: "/contact" },
+      { label: "Contact Us", to: "/contact" },
+    ],
+  },
 ];
+
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
