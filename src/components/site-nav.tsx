@@ -72,13 +72,7 @@ export function SiteNav() {
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "border-b border-border/60 bg-background/92 shadow-sm backdrop-blur-xl"
-            : "bg-gradient-to-b from-background/90 via-background/55 to-transparent"
-        }`}
-      >
+      <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
         <div className="container-luxe grid h-20 grid-cols-[1fr_auto_1fr] items-center gap-4">
           <div className="flex items-center">
             <button
