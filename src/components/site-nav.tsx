@@ -25,7 +25,6 @@ const menuItems: MenuItem[] = [
       { label: "Completed Projects", to: "/projects?type=commercial-completed" },
     ],
   },
-  { label: "Land Enquiry", to: "/contact?topic=land" },
   {
     label: "Media",
     children: [
@@ -36,18 +35,6 @@ const menuItems: MenuItem[] = [
   },
   { label: "Blog", to: "/blogs" },
   { label: "Channel Partners", to: "/contact?topic=channel-partner" },
-  { label: "Sustainability", to: "/about/vision-mission" },
-  { label: "Leadership", to: "/about/team" },
-  {
-    label: "Purva Experiences",
-    children: [
-      { label: "Lifestyle", to: "/blogs?cat=lifestyle" },
-      { label: "Events", to: "/blogs?cat=events" },
-    ],
-  },
-  { label: "Investors", to: "/about/company" },
-  { label: "Payments & Refunds", to: "/contact?topic=payments" },
-  { label: "NRI Corner", to: "/contact?topic=nri" },
 ];
 
 const ease = [0.22, 1, 0.36, 1] as const;
