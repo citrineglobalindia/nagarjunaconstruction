@@ -89,7 +89,7 @@ export function SiteNav() {
           </div>
 
           <Link to="/" className="flex items-center justify-center">
-            <span className="font-display text-2xl tracking-[0.2em] text-foreground md:text-3xl">
+            <span className="font-display text-2xl tracking-[0.2em] text-white md:text-3xl">
               NAGARJUNA
             </span>
           </Link>
